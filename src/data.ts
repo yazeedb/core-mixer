@@ -113,11 +113,6 @@ const exercises: Entry[] = [
     type: 'exercise'
   },
   {
-    name: 'Crunches',
-    audioFiles: [],
-    type: 'exercise'
-  },
-  {
     name: 'Leg raises',
     audioFiles: [],
     type: 'exercise'
