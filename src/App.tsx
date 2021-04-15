@@ -1,28 +1,88 @@
+import { useEffect } from 'react';
+
 import { generateWorkout } from './data';
-import { useState } from 'react';
+import './App.scss';
+import { useMachine } from '@xstate/react';
+import { workoutMachine } from './workoutMachine';
+
+const initialWorkout = generateWorkout();
 
 export const App = () => {
-  const [workout, setWorkout] = useState(generateWorkout());
+  const [{ context, matches }, send] = useMachine(workoutMachine, {
+    devTools: true,
+    context: { workout: initialWorkout }
+  });
+
+  const { workout, exerciseIndex, timeRemaining } = context;
+
+  const totalWorkoutTime = workout.reduce(
+    (total, exercise) => total + exercise.seconds,
+    0
+  );
+
+  const currentExercise = workout[exerciseIndex];
+
+  const renderContent = () => {
+    switch (true) {
+      case matches('viewingWorkout'):
+      case matches('introducingWorkout'):
+        return (
+          <>
+            <h2>{printWorkoutTime(totalWorkoutTime)} workout</h2>
+
+            <section>
+              {
+                <ul>
+                  {workout.map((item, index) => (
+                    <li key={index}>{item.name}</li>
+                  ))}
+                </ul>
+              }
+            </section>
+
+            <footer>
+              <button
+                onClick={() =>
+                  send({ type: 'NEW_WORKOUT', workout: generateWorkout() })
+                }
+              >
+                Mix it up
+              </button>
+
+              <button onClick={() => send({ type: 'INTRODUCE_WORKOUT' })}>
+                Start
+              </button>
+            </footer>
+          </>
+        );
+
+      case matches('workoutRunning'):
+        return (
+          <>
+            <h3>{currentExercise.name}</h3>
+
+            <p>{timeRemaining}</p>
+          </>
+        );
+    }
+  };
 
   return (
     <main>
-      <nav>
+      <header>
         <h1>Core Mixer</h1>
-      </nav>
+      </header>
 
-      <section>
-        {
-          <ul>
-            {workout.map((item) => (
-              <li>{item.name}</li>
-            ))}
-          </ul>
-        }
-      </section>
-
-      <footer>
-        <button onClick={() => setWorkout(generateWorkout())}>Mix it up</button>
-      </footer>
+      {renderContent()}
     </main>
   );
+};
+
+const printWorkoutTime = (seconds: number): string => {
+  const asMinutes = Math.floor(seconds / 60);
+  const remainder = seconds % 60;
+
+  return remainder === 0
+    ? `${asMinutes} minute`
+    : `${asMinutes} minutes ${remainder} seconds`;
 };

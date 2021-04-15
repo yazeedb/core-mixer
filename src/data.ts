@@ -5,6 +5,7 @@ import {
   pick30or60Seconds,
   shuffleArray
 } from './utils';
+import thirtySecRestMp4 from './audio/thirty-sec-rest.mp4';
 
 const BREAK_DURATION = 30;
 const MIN_SECONDS_NO_BREAKS = 270;
@@ -31,12 +32,12 @@ interface Entry {
   audioFiles: string[];
 }
 
-interface TimedExercise extends Entry {
+export interface TimedExercise extends Entry {
   type: 'exercise';
   seconds: 30 | 60;
 }
 
-interface Break extends Entry {
+export interface Break extends Entry {
   type: 'break';
   name: '30 second rest';
   seconds: 30;
@@ -80,7 +81,7 @@ const withInterspersedBreaks = (
 
   const yourBreak: Break = {
     name: '30 second rest',
-    audioFiles: [],
+    audioFiles: [thirtySecRestMp4],
     type: 'break',
     seconds: BREAK_DURATION
   };
