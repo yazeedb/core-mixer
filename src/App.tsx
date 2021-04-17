@@ -1,16 +1,11 @@
-import { useEffect } from 'react';
-
 import { generateWorkout } from './data';
 import './App.scss';
 import { useMachine } from '@xstate/react';
 import { workoutMachine } from './workoutMachine';
 
-const initialWorkout = generateWorkout();
-
 export const App = () => {
   const [{ context, matches }, send] = useMachine(workoutMachine, {
-    devTools: true,
-    context: { workout: initialWorkout }
+    devTools: true
   });
 
   const { workout, exerciseIndex, timeRemaining } = context;

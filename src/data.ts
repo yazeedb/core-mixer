@@ -6,6 +6,8 @@ import {
   shuffleArray
 } from './utils';
 import thirtySecRestMp4 from './audio/thirty-sec-rest.mp4';
+import thirtySecWorkoutMp4 from './audio/thirty-second-workout.mp4';
+import sixtySecWorkoutMp4 from './audio/sixty-second-workout.mp4';
 
 const BREAK_DURATION = 30;
 const MIN_SECONDS_NO_BREAKS = 270;
@@ -26,24 +28,25 @@ const allowedWorkoutTimesNoBreaks = [
   MAX_SECONDS_NO_BREAKS
 ];
 
-interface Entry {
-  type: 'exercise' | 'break';
+interface Segment {
   name: string;
   audioFiles: string[];
 }
 
-export interface TimedExercise extends Entry {
-  type: 'exercise';
+export interface TimedExercise extends Segment {
+  type: 'TimedExercise';
   seconds: 30 | 60;
 }
 
-export interface Break extends Entry {
+export interface Break extends Segment {
   type: 'break';
   name: '30 second rest';
   seconds: 30;
 }
 
-export type Workout = (TimedExercise | Break)[];
+type WorkoutItem = TimedExercise | Break;
+
+export type Workout = WorkoutItem[];
 
 export const generateWorkout = (): Workout => {
   const shuffledExercises = shuffleArray(exercises);
@@ -59,8 +62,9 @@ export const generateWorkout = (): Workout => {
 
     const timedExercise: TimedExercise = {
       ...shuffledExercises[index],
+      type: 'TimedExercise',
       seconds,
-      type: 'exercise'
+      audioFiles: [seconds === 30 ? thirtySecWorkoutMp4 : sixtySecWorkoutMp4]
     };
 
     yourExercises.push(timedExercise);
@@ -94,73 +98,61 @@ const withInterspersedBreaks = (
     );
   }
 
-  const oneThirdIndex = percentToIndex(exercises.length, 0.33);
-  const twoThirdsIndex = percentToIndex(exercises.length, 0.66);
+  const firstBreakIndex = percentToIndex(exercises.length, 0.45);
+  const secondBreakIndex = percentToIndex(exercises.length, 0.75);
 
   return exercises.flatMap((e, index) =>
-    index === oneThirdIndex || index === twoThirdsIndex ? [yourBreak, e] : e
+    index === firstBreakIndex || index === secondBreakIndex ? [yourBreak, e] : e
   );
 };
 
-const exercises: Entry[] = [
+const exercises: Segment[] = [
   {
     name: 'Double-leg stretches',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Hip dips',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Leg raises',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Bicycles',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Criss-cross',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Ab circles',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Straddle crunches',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Pike presses',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Patty cakes',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Tailbone crunches',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Crunches',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   },
   {
     name: 'Reverse crunches',
-    audioFiles: [],
-    type: 'exercise'
+    audioFiles: []
   }
 ];

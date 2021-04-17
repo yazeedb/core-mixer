@@ -1,9 +1,7 @@
 import { assign, Machine } from 'xstate';
-import { Workout } from './data';
+import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
-import thirtySecWorkoutMp4 from './audio/thirty-second-workout.mp4';
-import sixtySecWorkoutMp4 from './audio/sixty-second-workout.mp4';
 
 interface MachineContext {
   workout: Workout;
@@ -18,14 +16,14 @@ export const workoutMachine = Machine<MachineContext, any, any>(
     context: {
       timeRemaining: 0,
       exerciseIndex: -1,
-      workout: []
+      workout: generateWorkout()
     },
     states: {
       viewingWorkout: {
         on: {
           INTRODUCE_WORKOUT: 'introducingWorkout',
           NEW_WORKOUT: {
-            actions: 'setWorkout'
+            actions: 'generateNewWorkout'
           }
         }
       },
@@ -75,19 +73,25 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   },
   {
     actions: {
-      setWorkout: assign({
-        workout: (_, event) => event.workout
+      generateNewWorkout: assign({
+        workout: (_) => generateWorkout()
       }),
+
       alertIf30SecLeft: assign((context) => {
         const { workout, timeRemaining, exerciseIndex } = context;
-        const { seconds } = workout[exerciseIndex];
+        const { seconds, type } = workout[exerciseIndex];
 
-        if (timeRemaining < seconds && timeRemaining === 30) {
+        if (
+          type !== 'break' &&
+          timeRemaining < seconds &&
+          timeRemaining === 30
+        ) {
           console.warn('30 seconds left!');
         }
 
         return context;
       }),
+
       alertIf10SecLeft: assign((context) => {
         const { timeRemaining } = context;
 
@@ -97,6 +101,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
         return context;
       }),
+
       setNextExercise: assign((context) => {
         const { exerciseIndex, workout } = context;
         const nextIndex = exerciseIndex + 1;
@@ -108,6 +113,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           timeRemaining: nextExercise.seconds
         };
       }),
+
       updateTimer: assign({
         timeRemaining: (context) => context.timeRemaining - 1
       })
@@ -119,15 +125,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       noMoreExercises: ({ workout, exerciseIndex }) =>
         exerciseIndex >= workout.length - 1,
 
-      timeIsUp: ({ timeRemaining }) => timeRemaining === 0,
-
-      restComingUp: ({ workout, exerciseIndex, timeRemaining }) => {
-        const nextWorkout = workout[exerciseIndex + 1];
-
-        return (
-          nextWorkout && nextWorkout.type === 'break' && timeRemaining === 0
-        );
-      }
+      timeIsUp: ({ timeRemaining }) => timeRemaining === 0
     },
     services: {
       startTimer: () => (cb) => {
@@ -138,16 +136,10 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
       introduceWorkout: () => playAudio(workoutIntroMp4),
 
-      announceExercise: ({ workout, exerciseIndex }, event) => {
-        const { seconds, audioFiles } = workout[exerciseIndex];
-        const src =
-          audioFiles.length > 0
-            ? audioFiles
-            : seconds === 30
-            ? thirtySecWorkoutMp4
-            : sixtySecWorkoutMp4;
+      announceExercise: ({ workout, exerciseIndex }) => {
+        const { audioFiles } = workout[exerciseIndex];
 
-        return playAudio(src);
+        return playAudio(audioFiles);
       }
     }
   }
