@@ -40,8 +40,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         states: {
           introducingExercise: {
             invoke: {
-              src: 'announceExercise',
-              onDone: 'running'
+              src: 'announceExercise'
+              // onDone: 'running'
             }
           },
           running: {

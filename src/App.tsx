@@ -28,7 +28,10 @@ export const App = () => {
             {
               <ul>
                 {workout.map(({ name, type, seconds }, index) => (
-                  <li key={index}>
+                  <li
+                    key={index}
+                    className={type === 'break' ? 'break' : undefined}
+                  >
                     <p className="exercise-name">{name}</p>
 
                     {type === 'TimedExercise' ? (
@@ -54,11 +57,11 @@ export const App = () => {
 
       case matches('workoutRunning'):
         return (
-          <>
+          <section>
             <h3>{currentExercise.name}</h3>
 
             <p>{timeRemaining}</p>
-          </>
+          </section>
         );
     }
   };
@@ -78,7 +81,6 @@ export const App = () => {
           }
         >
           Mix it up
-          {/* <img src="icon-refresh.svg" alt="Generate new workout" /> */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -93,7 +95,11 @@ export const App = () => {
         </button>
       </header>
 
-      <main>{renderContent()}</main>
+      <main
+        className={matches('workoutRunning') ? 'workout-running' : undefined}
+      >
+        {renderContent()}
+      </main>
     </>
   );
 };

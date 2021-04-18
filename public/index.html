@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=no"
+    />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -27,6 +30,18 @@
     <title>React App</title>
 
     <style>
+      :root {
+        --bg-primary: #0967d2;
+        --text-primary: #e6f6ff;
+
+        --bg-secondary: #e4e7eb;
+        --text-secondary: #1f2933;
+
+        --border-primary: #3e4c59;
+
+        --supporting-teal-1: #0c6b58;
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -35,7 +50,7 @@
       body {
         background-color: #1f2933;
         height: 100vh;
-        color: #e4e7eb;
+        color: var(--text-primary);
         font-family: Avenir, Arial, Helvetica, sans-serif;
         margin: 20px;
         max-width: 600px;
@@ -47,7 +62,7 @@
       }
 
       header {
-        border-bottom: 1px solid #3e4c59;
+        border-bottom: 1px solid var(--border-primary);
         padding: 10px 20px;
         display: flex;
         align-items: center;
@@ -60,14 +75,14 @@
         padding: 6px 12px;
         border: 0;
         border-radius: 6px;
-        color: #e4e7eb;
       }
 
       .shuffle-workout {
         display: flex;
         align-items: center;
         text-align: center;
-        background-color: #127fbf;
+        background-color: var(--bg-secondary);
+        color: var(--text-secondary);
       }
 
       h1 {
@@ -75,11 +90,11 @@
       }
 
       .primary {
-        fill: #127fbf;
+        fill: var(--bg-secondary);
       }
 
       .secondary {
-        fill: white;
+        fill: var(--text-secondary);
       }
 
       svg {
@@ -88,15 +103,20 @@
 
       ul {
         list-style: none;
-        max-height: 250px;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        margin: 15px 0;
       }
 
       li {
-        margin: 20px 4px;
+        padding: 20px 4px;
         display: flex;
         align-items: center;
+        border-bottom: 1px solid var(--border-primary);
+      }
+
+      .break {
+        background-color: var(--supporting-teal-1);
+        font-weight: bold;
+        justify-content: center;
       }
 
       .exercise-name {
@@ -109,7 +129,8 @@
       }
 
       .start-workout {
-        background-color: #035388;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
         font-size: 20px;
         padding: 12px 16px;
       }
