@@ -28,43 +28,38 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         }
       },
       introducingWorkout: {
-        on: { INTRODUCE_EXERCISE: 'introducingExercise' },
         entry: 'setNextExercise',
         invoke: {
           src: 'introduceWorkout',
-          onDone: 'introducingExercise'
-        }
-      },
-      introducingExercise: {
-        on: { START_EXERCISE: 'workoutRunning' },
-        invoke: {
-          src: 'announceExercise',
           onDone: 'workoutRunning'
         }
       },
       workoutRunning: {
-        initial: 'running',
-        on: {
-          TICK: {
-            actions: ['updateTimer', 'alertIf30SecLeft', 'alertIf10SecLeft']
-          }
-        },
-        onDone: [
-          {
-            target: 'introducingExercise',
-            cond: 'hasExercisesLeft',
-            actions: 'setNextExercise'
-          },
-          { target: 'workoutComplete', cond: 'noMoreExercises' }
-        ],
+        initial: 'introducingExercise',
+        onDone: 'workoutComplete',
         states: {
+          introducingExercise: {
+            invoke: {
+              src: 'announceExercise',
+              onDone: 'running'
+            }
+          },
           running: {
             invoke: { src: 'startTimer' },
             on: {
-              TICK: [{ target: 'exerciseComplete', cond: 'timeIsUp' }]
+              TICK: { actions: 'updateTimer' },
+              TICK_30_SEC_LEFT: { actions: 'alert30SecLeft' },
+              TICK_10_SEC_LEFT: { actions: 'alert10SecLeft' },
+              TIME_IS_UP: [
+                {
+                  target: 'introducingExercise',
+                  cond: 'hasExercisesLeft',
+                  actions: 'setNextExercise'
+                },
+                { target: 'exerciseComplete', cond: 'noExercisesLeft' }
+              ]
             }
           },
-
           exerciseComplete: { type: 'final' }
         }
       },
@@ -75,31 +70,6 @@ export const workoutMachine = Machine<MachineContext, any, any>(
     actions: {
       generateNewWorkout: assign({
         workout: (_) => generateWorkout()
-      }),
-
-      alertIf30SecLeft: assign((context) => {
-        const { workout, timeRemaining, exerciseIndex } = context;
-        const { seconds, type } = workout[exerciseIndex];
-
-        if (
-          type !== 'break' &&
-          timeRemaining < seconds &&
-          timeRemaining === 30
-        ) {
-          console.warn('30 seconds left!');
-        }
-
-        return context;
-      }),
-
-      alertIf10SecLeft: assign((context) => {
-        const { timeRemaining } = context;
-
-        if (timeRemaining === 10) {
-          console.warn('10 seconds left!');
-        }
-
-        return context;
       }),
 
       setNextExercise: assign((context) => {
@@ -116,6 +86,18 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
       updateTimer: assign({
         timeRemaining: (context) => context.timeRemaining - 1
+      }),
+
+      alert30SecLeft: assign((context) => {
+        console.warn('30 sec left!');
+
+        return context;
+      }),
+
+      alert10SecLeft: assign((context) => {
+        console.warn('10 sec left!');
+
+        return context;
       })
     },
     guards: {
@@ -128,10 +110,27 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       timeIsUp: ({ timeRemaining }) => timeRemaining === 0
     },
     services: {
-      startTimer: () => (cb) => {
+      startTimer: ({ exerciseIndex, workout }) => (cb) => {
+        const currentExercise = workout[exerciseIndex];
+        let timeRemaining = currentExercise.seconds;
+
         setInterval(() => {
+          timeRemaining--;
+
+          if (timeRemaining === 30 && currentExercise.seconds === 60) {
+            cb({ type: 'TICK_30_SEC_LEFT' });
+          }
+
+          if (timeRemaining === 10) {
+            cb({ type: 'TICK_10_SEC_LEFT' });
+          }
+
+          if (timeRemaining === 0) {
+            cb({ type: 'TIME_IS_UP' });
+          }
+
           cb({ type: 'TICK' });
-        }, 50);
+        }, 100);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),
@@ -140,7 +139,10 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         const { audioFiles } = workout[exerciseIndex];
 
         return playAudio(audioFiles);
-      }
+      },
+
+      alertWhen30SecLeft: () => playAudio(workoutIntroMp4),
+      alertWhen10SecLeft: () => playAudio(workoutIntroMp4)
     }
   }
 );
@@ -149,7 +151,7 @@ const playAudio = (audioFiles: string[]) =>
   new Promise((resolve) => {
     new Howl({
       src: audioFiles,
-      rate: 2,
+      rate: 4,
       onend: resolve
     }).play();
   });
