@@ -1,4 +1,4 @@
-import { assign, Machine } from 'xstate';
+import { assign, Machine, send } from 'xstate';
 import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
@@ -45,9 +45,11 @@ export const workoutMachine = Machine<MachineContext, any, any>(
             }
           },
           running: {
-            invoke: { src: 'startTimer' },
+            invoke: { id: 'timer', src: 'startTimer' },
             on: {
-              TICK: { actions: 'updateTimer' },
+              TICK: {
+                actions: ['setTimeRemaining', 'notifyTimerService']
+              },
               TICK_30_SEC_LEFT: { actions: 'alert30SecLeft' },
               TICK_10_SEC_LEFT: { actions: 'alert10SecLeft' },
               TIME_IS_UP: [
@@ -72,6 +74,11 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         workout: (_) => generateWorkout()
       }),
 
+      notifyTimerService: send(
+        ({ timeRemaining }) => ({ type: 'NEW_TIME', timeRemaining }),
+        { to: 'timer' }
+      ),
+
       setNextExercise: assign((context) => {
         const { exerciseIndex, workout } = context;
         const nextIndex = exerciseIndex + 1;
@@ -84,18 +91,18 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         };
       }),
 
-      updateTimer: assign({
+      setTimeRemaining: assign({
         timeRemaining: (context) => context.timeRemaining - 1
       }),
 
       alert30SecLeft: assign((context) => {
-        console.warn('30 sec left!');
+        console.warn('PLACEHOLDER WARNING: 30 sec left!');
 
         return context;
       }),
 
       alert10SecLeft: assign((context) => {
-        console.warn('10 sec left!');
+        console.warn('PLACEHOLDER WARNING: 10 sec left!');
 
         return context;
       })
@@ -110,13 +117,11 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       timeIsUp: ({ timeRemaining }) => timeRemaining === 0
     },
     services: {
-      startTimer: ({ exerciseIndex, workout }) => (cb) => {
+      startTimer: ({ exerciseIndex, workout }) => (cb, onReceive) => {
         const currentExercise = workout[exerciseIndex];
-        let timeRemaining = currentExercise.seconds;
 
-        setInterval(() => {
-          timeRemaining--;
-
+        // @ts-ignore
+        onReceive(({ timeRemaining }) => {
           if (timeRemaining === 30 && currentExercise.seconds === 60) {
             cb({ type: 'TICK_30_SEC_LEFT' });
           }
@@ -128,7 +133,9 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           if (timeRemaining === 0) {
             cb({ type: 'TIME_IS_UP' });
           }
+        });
 
+        setInterval(() => {
           cb({ type: 'TICK' });
         }, 20);
       },
