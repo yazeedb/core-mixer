@@ -104,7 +104,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       hasExercisesLeft: ({ workout, exerciseIndex }) =>
         exerciseIndex < workout.length - 1,
 
-      noMoreExercises: ({ workout, exerciseIndex }) =>
+      noExercisesLeft: ({ workout, exerciseIndex }) =>
         exerciseIndex >= workout.length - 1,
 
       timeIsUp: ({ timeRemaining }) => timeRemaining === 0
@@ -130,7 +130,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           }
 
           cb({ type: 'TICK' });
-        }, 100);
+        }, 20);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),
