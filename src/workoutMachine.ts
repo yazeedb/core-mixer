@@ -137,7 +137,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
         setInterval(() => {
           cb({ type: 'TICK' });
-        }, 20);
+        }, 500);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),

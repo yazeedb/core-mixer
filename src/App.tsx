@@ -16,11 +16,12 @@ export const App = () => {
   );
 
   const currentExercise = workout[exerciseIndex];
+  const showHomepage =
+    matches('viewingWorkout') || matches('introducingWorkout');
 
   const renderContent = () => {
     switch (true) {
-      case matches('viewingWorkout'):
-      case matches('introducingWorkout'):
+      case showHomepage:
         return (
           <>
             <h2>{printWorkoutTime(totalWorkoutTime)}</h2>
@@ -55,45 +56,48 @@ export const App = () => {
           </>
         );
 
-      case matches('workoutRunning'):
-        return (
-          <section>
-            <h3>{currentExercise.name}</h3>
+      case matches('workoutRunning'): {
+        const progress = `${exerciseIndex + 1} of ${workout.length - 1}`;
 
-            <p>{timeRemaining}</p>
-          </section>
+        return (
+          <>
+            <section className="workout-section">
+              <span>{progress}</span>
+              <h1>{currentExercise.name}</h1>
+
+              <h2>{timeRemaining} seconds</h2>
+            </section>
+          </>
         );
+      }
     }
   };
 
   return (
     <>
-      <header>
-        <h1>Core Mixer</h1>
+      {showHomepage ? (
+        <header>
+          <h1>Core Mixer</h1>
 
-        <button
-          className="shuffle-workout"
-          onClick={() =>
-            send({
-              type: 'NEW_WORKOUT',
-              workout: generateWorkout()
-            })
-          }
-        >
-          Mix it up
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="icon-refresh"
+          <button
+            className="shuffle-workout"
+            onClick={() => send({ type: 'NEW_WORKOUT' })}
           >
-            <circle cx="12" cy="12" r="10" className="primary" />
-            <path
-              className="secondary"
-              d="M8.52 7.11a5.98 5.98 0 0 1 8.98 2.5 1 1 0 1 1-1.83.8 4 4 0 0 0-5.7-1.86l.74.74A1 1 0 0 1 10 11H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1.7-.7l.82.81zm5.51 8.34l-.74-.74A1 1 0 0 1 14 13h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1.7.7l-.82-.81A5.98 5.98 0 0 1 6.5 14.4a1 1 0 1 1 1.83-.8 4 4 0 0 0 5.7 1.85z"
-            />
-          </svg>
-        </button>
-      </header>
+            Mix it up
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="icon-refresh"
+            >
+              <circle cx="12" cy="12" r="10" className="primary" />
+              <path
+                className="secondary"
+                d="M8.52 7.11a5.98 5.98 0 0 1 8.98 2.5 1 1 0 1 1-1.83.8 4 4 0 0 0-5.7-1.86l.74.74A1 1 0 0 1 10 11H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1.7-.7l.82.81zm5.51 8.34l-.74-.74A1 1 0 0 1 14 13h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1.7.7l-.82-.81A5.98 5.98 0 0 1 6.5 14.4a1 1 0 1 1 1.83-.8 4 4 0 0 0 5.7 1.85z"
+              />
+            </svg>
+          </button>
+        </header>
+      ) : null}
 
       <main
         className={matches('workoutRunning') ? 'workout-running' : undefined}
