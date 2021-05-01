@@ -13,8 +13,8 @@ export const SkipIcon = () => (
         y2="1"
         gradientUnits="objectBoundingBox"
       >
-        <stop offset="0" stop-color="#03449e" />
-        <stop offset="1" stop-color="#01337d" />
+        <stop offset="0" stopColor="#03449e" />
+        <stop offset="1" stopColor="#01337d" />
       </linearGradient>
       <clipPath id="clip-path">
         <rect width="13.065" height="21" fill="none" />
@@ -39,7 +39,7 @@ export const SkipIcon = () => (
                       id="Repeat_Grid_1"
                       data-name="Repeat Grid 1"
                       transform="translate(339.935 597)"
-                      clip-path="url(#clip-path)"
+                      clipPath="url(#clip-path)"
                     >
                       <g transform="translate(-799.935 -669)">
                         <path

@@ -9,20 +9,20 @@ export const App = () => {
     devTools: true
   });
 
+  const matchesAny = (states: string[]) => states.some(matches);
+
   const renderContent = () => {
     if (matches('viewingWorkout')) {
       return (
         <Home
           workout={context.workout}
           onStart={() => send('INTRODUCE_WORKOUT')}
-          onShuffle={() => {
-            send('SHUFFLE');
-          }}
+          onShuffle={() => send('SHUFFLE')}
         />
       );
     }
 
-    if (matches('introducingWorkout') || matches('workoutRunning')) {
+    if (matchesAny(['introducingWorkout', 'workoutRunning'])) {
       return <WorkoutPage context={context} />;
     }
   };

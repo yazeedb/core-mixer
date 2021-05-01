@@ -43,7 +43,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
 
         <ul className="workout-list">
           {workout.map((item) => (
-            <li className="workout-item">
+            <li className="workout-item" key={item.name}>
               <div className="bullet-container">
                 <div className="bullet" />
               </div>
