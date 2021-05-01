@@ -5,10 +5,18 @@ import { Circle } from 'rc-progress';
 interface WorkoutPageProps {
   context: MachineContext;
   onPause: () => void;
-  onSkip: () => {};
+  onContinue: () => void;
+  onSkip: () => void;
+  isPaused: boolean;
 }
 
-export const WorkoutPage = ({ context }: WorkoutPageProps) => {
+export const WorkoutPage = ({
+  context,
+  isPaused,
+  onPause,
+  onContinue,
+  onSkip
+}: WorkoutPageProps) => {
   const { workout, timeRemaining, exerciseIndex } = context;
   const currentExercise = workout[exerciseIndex];
   const percentage = timeRemaining / currentExercise.seconds;
@@ -28,8 +36,6 @@ export const WorkoutPage = ({ context }: WorkoutPageProps) => {
             strokeWidth={4}
             trailWidth={4}
             strokeColor="#05606e"
-            className="beef"
-            prefixCls="prefixed-salad"
           />
 
           <img
@@ -42,11 +48,14 @@ export const WorkoutPage = ({ context }: WorkoutPageProps) => {
       </main>
 
       <footer>
-        <button className="start-workout button-primary" onClick={() => {}}>
-          PAUSE WORKOUT
+        <button
+          className="start-workout button-primary"
+          onClick={isPaused ? onContinue : onPause}
+        >
+          {isPaused ? 'CONTINUE' : 'PAUSE'}
         </button>
 
-        <button className="shuffle button-secondary" onClick={() => {}}>
+        <button className="shuffle button-secondary" onClick={onSkip}>
           <SkipIcon />
         </button>
       </footer>

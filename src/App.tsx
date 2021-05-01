@@ -26,8 +26,10 @@ export const App = () => {
       return (
         <WorkoutPage
           context={context}
-          onPause={() => send('PAUSE_WORKOUT')}
-          onSkip={() => send('SKIP_EXERCISE')}
+          isPaused={matches('workoutRunning.paused')}
+          onPause={() => send('PAUSE')}
+          onContinue={() => send('CONTINUE')}
+          onSkip={() => send('TIME_IS_UP')}
         />
       );
     }

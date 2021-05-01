@@ -3,6 +3,12 @@ import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
 
+const getInitialContext = (): MachineContext => ({
+  timeRemaining: 0,
+  exerciseIndex: -1,
+  workout: generateWorkout()
+});
+
 export interface MachineContext {
   workout: Workout;
   timeRemaining: number;
@@ -13,11 +19,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   {
     id: 'workout',
     initial: 'viewingWorkout',
-    context: {
-      timeRemaining: 0,
-      exerciseIndex: -1,
-      workout: generateWorkout()
-    },
+    context: getInitialContext(),
     states: {
       viewingWorkout: {
         on: {
@@ -52,6 +54,20 @@ export const workoutMachine = Machine<MachineContext, any, any>(
               },
               TICK_30_SEC_LEFT: { actions: 'alert30SecLeft' },
               TICK_10_SEC_LEFT: { actions: 'alert10SecLeft' },
+              PAUSE: 'paused',
+              TIME_IS_UP: [
+                {
+                  target: 'introducingExercise',
+                  cond: 'hasExercisesLeft',
+                  actions: 'setNextExercise'
+                },
+                { target: 'exerciseComplete', cond: 'noExercisesLeft' }
+              ]
+            }
+          },
+          paused: {
+            on: {
+              CONTINUE: 'running',
               TIME_IS_UP: [
                 {
                   target: 'introducingExercise',
@@ -65,11 +81,19 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           exerciseComplete: { type: 'final' }
         }
       },
-      workoutComplete: {}
+      workoutComplete: {
+        on: {
+          GO_HOME: {
+            target: 'viewingWorkout',
+            actions: 'resetContext'
+          }
+        }
+      }
     }
   },
   {
     actions: {
+      resetContext: getInitialContext,
       generateNewWorkout: assign({
         workout: (_) => generateWorkout()
       }),
@@ -135,9 +159,11 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           }
         });
 
-        setInterval(() => {
+        const timerId = setInterval(() => {
           cb({ type: 'TICK' });
         }, 1000);
+
+        return () => clearInterval(timerId);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),
