@@ -1,158 +1,159 @@
-import {
-  getRandomItem,
-  getRandomInt,
-  percentToIndex,
-  pick30or60Seconds,
-  shuffleArray
-} from './utils';
-import thirtySecRestMp4 from './audio/thirty-sec-rest.mp4';
-import thirtySecWorkoutMp4 from './audio/thirty-second-workout.mp4';
-import sixtySecWorkoutMp4 from './audio/sixty-second-workout.mp4';
+import { getRandomInt, percentToIndex, shuffleArray } from './utils';
 
-const BREAK_DURATION = 30;
-const MIN_SECONDS_NO_BREAKS = 270;
-const MAX_SECONDS_NO_BREAKS = 480;
+export type Seconds = 30 | 60;
 
-export const MIN_SECONDS_WITH_BREAKS = MIN_SECONDS_NO_BREAKS + BREAK_DURATION;
-export const MAX_SECONDS_WITH_BREAKS = MAX_SECONDS_NO_BREAKS + BREAK_DURATION;
-
-const allowedWorkoutTimesNoBreaks = [
-  MIN_SECONDS_NO_BREAKS,
-  300,
-  330,
-  360,
-  390,
-  420,
-  450,
-  480,
-  MAX_SECONDS_NO_BREAKS
-];
+export enum Difficulty {
+  beginner = 1,
+  intermediate = 2,
+  advanced = 3
+}
 
 interface Segment {
   name: string;
   audioFiles: string[];
+  videoDemoUrl: string;
+  imageUrl: string;
 }
 
-export interface TimedExercise extends Segment {
-  type: 'TimedExercise';
-  seconds: 30 | 60;
+interface Exercise extends Segment {
+  difficulty: Difficulty;
 }
 
-export interface Break extends Segment {
-  type: 'break';
-  name: '30 second rest';
+interface TimedExercise extends Exercise {
+  type: 'timedExercise';
+  seconds: Seconds;
+}
+
+interface RestPeriod extends Segment {
+  type: 'restPeriod';
   seconds: 30;
 }
 
-type WorkoutItem = TimedExercise | Break;
+export type WorkoutItem = TimedExercise | RestPeriod;
 
 export type Workout = WorkoutItem[];
 
-export const generateWorkout = (): Workout => {
-  const shuffledExercises = shuffleArray(exercises);
-  const yourExercises: TimedExercise[] = [];
+export const printDifficulty = (d: Difficulty) => {
+  switch (d) {
+    case Difficulty.beginner:
+      return 'beginner';
 
-  const targetSecondsNoBreaks = getRandomItem(allowedWorkoutTimesNoBreaks);
-  let counter = targetSecondsNoBreaks;
-  let index = 0;
+    case Difficulty.intermediate:
+      return 'intermediate';
 
-  while (counter > 0) {
-    const thirtySecondsLeft = counter === 30;
-    const seconds = thirtySecondsLeft ? 30 : pick30or60Seconds();
-
-    const timedExercise: TimedExercise = {
-      ...shuffledExercises[index],
-      type: 'TimedExercise',
-      seconds,
-      audioFiles: [seconds === 30 ? thirtySecWorkoutMp4 : sixtySecWorkoutMp4]
-    };
-
-    yourExercises.push(timedExercise);
-
-    index++;
-    counter -= seconds;
+    case Difficulty.advanced:
+      return 'advanced';
   }
-
-  return withInterspersedBreaks(yourExercises, targetSecondsNoBreaks);
 };
 
-const withInterspersedBreaks = (
-  exercises: TimedExercise[],
-  targetSecondsNoBreaks: number
-): Workout => {
-  const numberOfBreaks =
-    targetSecondsNoBreaks === MAX_SECONDS_NO_BREAKS ? 1 : getRandomInt(1, 2);
+export const generateWorkout = (): Workout => {
+  const randomExercises = shuffleArray(exercises).slice(0, getRandomInt(5, 7));
 
-  const yourBreak: Break = {
-    name: '30 second rest',
-    audioFiles: [thirtySecRestMp4],
-    type: 'break',
-    seconds: BREAK_DURATION
+  const restPeriod: RestPeriod = {
+    type: 'restPeriod',
+    name: 'Rest',
+    audioFiles: [],
+    videoDemoUrl: '',
+    imageUrl: '/goku-situps.jpeg',
+    seconds: 30
   };
 
-  if (numberOfBreaks === 1) {
-    const middleIndex = percentToIndex(exercises.length, 0.5);
+  const halfwayIndex = percentToIndex(randomExercises.length, 0.5);
 
-    return exercises.flatMap((e, index) =>
-      index === middleIndex ? [yourBreak, e] : e
-    );
-  }
+  return randomExercises.flatMap<WorkoutItem>((e, index) => {
+    const timedExercise: TimedExercise = {
+      ...e,
+      type: 'timedExercise',
+      seconds: Math.random() > 0.85 ? 30 : 60
+    };
 
-  const firstBreakIndex = percentToIndex(exercises.length, 0.45);
-  const secondBreakIndex = percentToIndex(exercises.length, 0.75);
-
-  return exercises.flatMap((e, index) =>
-    index === firstBreakIndex || index === secondBreakIndex ? [yourBreak, e] : e
-  );
+    return index === halfwayIndex ? [restPeriod, timedExercise] : timedExercise;
+  });
 };
 
-const exercises: Segment[] = [
+const exercises: Exercise[] = [
   {
     name: 'Double-leg stretches',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Hip dips',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Leg raises',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Bicycles',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Criss-cross',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Ab circles',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Straddle crunches',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Pike presses',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Patty cakes',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Tailbone crunches',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Crunches',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Reverse crunches',
-    audioFiles: []
+    audioFiles: [],
+    videoDemoUrl: '',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   }
 ];

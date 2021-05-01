@@ -22,7 +22,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       viewingWorkout: {
         on: {
           INTRODUCE_WORKOUT: 'introducingWorkout',
-          NEW_WORKOUT: {
+          SHUFFLE: {
             actions: 'generateNewWorkout'
           }
         }
@@ -40,8 +40,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         states: {
           introducingExercise: {
             invoke: {
-              src: 'announceExercise'
-              // onDone: 'running'
+              src: 'announceExercise',
+              onDone: 'running'
             }
           },
           running: {
@@ -137,7 +137,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
         setInterval(() => {
           cb({ type: 'TICK' });
-        }, 500);
+        }, 100);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),
@@ -156,9 +156,10 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
 const playAudio = (audioFiles: string[]) =>
   new Promise((resolve) => {
-    new Howl({
-      src: audioFiles,
-      rate: 4,
-      onend: resolve
-    }).play();
+    resolve(null);
+    // new Howl({
+    //   src: audioFiles,
+    //   rate: 4,
+    //   onend: resolve
+    // }).play();
   });
