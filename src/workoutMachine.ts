@@ -30,8 +30,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       introducingWorkout: {
         entry: 'setNextExercise',
         invoke: {
-          src: 'introduceWorkout'
-          // onDone: 'workoutRunning'
+          src: 'introduceWorkout',
+          onDone: 'workoutRunning'
         }
       },
       workoutRunning: {
@@ -137,7 +137,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
         setInterval(() => {
           cb({ type: 'TICK' });
-        }, 100);
+        }, 1000);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),

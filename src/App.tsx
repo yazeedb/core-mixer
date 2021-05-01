@@ -23,7 +23,13 @@ export const App = () => {
     }
 
     if (matchesAny(['introducingWorkout', 'workoutRunning'])) {
-      return <WorkoutPage context={context} />;
+      return (
+        <WorkoutPage
+          context={context}
+          onPause={() => send('PAUSE_WORKOUT')}
+          onSkip={() => send('SKIP_EXERCISE')}
+        />
+      );
     }
   };
 

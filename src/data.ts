@@ -53,7 +53,7 @@ export const generateWorkout = (): Workout => {
     type: 'restPeriod',
     name: 'Rest',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     imageUrl: '/goku-situps.jpeg',
     seconds: 30
   };
@@ -75,84 +75,84 @@ const exercises: Exercise[] = [
   {
     name: 'Double-leg stretches',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Hip dips',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.beginner,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Leg raises',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Bicycles',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.beginner,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Criss-cross',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Ab circles',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.beginner,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Straddle crunches',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.advanced,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Pike presses',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.advanced,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Patty cakes',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Tailbone crunches',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Crunches',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.beginner,
     imageUrl: '/goku-situps.jpeg'
   },
   {
     name: 'Reverse crunches',
     audioFiles: [],
-    videoDemoUrl: '',
+    videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
   }
