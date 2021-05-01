@@ -61,7 +61,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
 
       <footer>
         <button className="start-workout button-primary" onClick={onStart}>
-          START WORKOUT
+          Start Workout
         </button>
         <button className="shuffle button-secondary" onClick={onShuffle}>
           <ShuffleIcon />

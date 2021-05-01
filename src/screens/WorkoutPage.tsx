@@ -52,7 +52,7 @@ export const WorkoutPage = ({
           className="start-workout button-primary"
           onClick={isPaused ? onContinue : onPause}
         >
-          {isPaused ? 'CONTINUE' : 'PAUSE'}
+          {isPaused ? 'Continue' : 'Pause workout'}
         </button>
 
         <button className="shuffle button-secondary" onClick={onSkip}>

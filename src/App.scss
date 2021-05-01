@@ -158,6 +158,7 @@ button {
   height: 60px;
   border: none;
   box-shadow: var(--box-shadow-2);
+  text-transform: uppercase;
 
   &.button-primary {
     background: var(--primary-1);

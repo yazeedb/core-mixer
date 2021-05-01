@@ -39,6 +39,19 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       workoutRunning: {
         initial: 'introducingExercise',
         onDone: 'workoutComplete',
+        on: {
+          SKIP: [
+            {
+              target: 'workoutRunning.introducingExercise',
+              cond: 'hasExercisesLeft',
+              actions: 'setNextExercise'
+            },
+            {
+              target: 'workoutRunning.exerciseComplete',
+              cond: 'noExercisesLeft'
+            }
+          ]
+        },
         states: {
           introducingExercise: {
             invoke: {
@@ -66,17 +79,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
             }
           },
           paused: {
-            on: {
-              CONTINUE: 'running',
-              TIME_IS_UP: [
-                {
-                  target: 'introducingExercise',
-                  cond: 'hasExercisesLeft',
-                  actions: 'setNextExercise'
-                },
-                { target: 'exerciseComplete', cond: 'noExercisesLeft' }
-              ]
-            }
+            on: { CONTINUE: 'running' }
           },
           exerciseComplete: { type: 'final' }
         }

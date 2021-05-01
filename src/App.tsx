@@ -29,7 +29,7 @@ export const App = () => {
           isPaused={matches('workoutRunning.paused')}
           onPause={() => send('PAUSE')}
           onContinue={() => send('CONTINUE')}
-          onSkip={() => send('TIME_IS_UP')}
+          onSkip={() => send('SKIP')}
         />
       );
     }
@@ -39,7 +39,6 @@ export const App = () => {
     <>
       <nav>
         <h1 className="app-name">CoreMixer</h1>
-
         <img src={sunIcon} role="presentation" />
       </nav>
 
