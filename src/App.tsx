@@ -3,6 +3,7 @@ import { useMachine } from '@xstate/react';
 import { workoutMachine } from './workoutMachine';
 import { Home } from './screens/Home';
 import { WorkoutPage } from './screens/WorkoutPage';
+import { WorkoutComplete } from './screens/WorkoutComplete';
 
 export const App = () => {
   const [{ context, matches }, send] = useMachine(workoutMachine, {
@@ -33,6 +34,13 @@ export const App = () => {
         />
       );
     }
+
+    return (
+      <WorkoutComplete
+        workout={context.workout}
+        onGoHome={() => send('GO_HOME')}
+      />
+    );
   };
 
   return (
