@@ -119,7 +119,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       }),
 
       setTimeRemaining: assign({
-        timeRemaining: (context) => context.timeRemaining - 1
+        timeRemaining: (context, { decrementAmount }) =>
+          context.timeRemaining - decrementAmount
       }),
 
       alert30SecLeft: assign((context) => {
@@ -162,11 +163,28 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           }
         });
 
-        const timerId = setInterval(() => {
-          cb({ type: 'TICK' });
-        }, 1000);
+        let id: number;
+        let past = Date.now();
 
-        return () => clearInterval(timerId);
+        /**
+         * Fast enough to animate smoothly, but slow enough
+         * to avoid unneccessary computations.
+         */
+        const THROTTLE_INTERVAL = 60;
+
+        const sendTick = () => {
+          const timeElapsed = Date.now() - past;
+
+          if (timeElapsed >= THROTTLE_INTERVAL) {
+            cb({ type: 'TICK', decrementAmount: timeElapsed / 1000 });
+            past = Date.now();
+          }
+
+          id = requestAnimationFrame(sendTick);
+        };
+        id = requestAnimationFrame(sendTick);
+
+        return () => cancelAnimationFrame(id);
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),

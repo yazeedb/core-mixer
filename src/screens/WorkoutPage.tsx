@@ -44,7 +44,7 @@ export const WorkoutPage = ({
           />
         </div>
 
-        <h3 className="time-remaining">{timeRemaining} seconds</h3>
+        <h3 className="time-remaining">{Math.floor(timeRemaining)} seconds</h3>
       </main>
 
       <footer>
