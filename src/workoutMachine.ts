@@ -3,7 +3,7 @@ import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
 
-interface MachineContext {
+export interface MachineContext {
   workout: Workout;
   timeRemaining: number;
   exerciseIndex: number;
@@ -30,8 +30,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       introducingWorkout: {
         entry: 'setNextExercise',
         invoke: {
-          src: 'introduceWorkout',
-          onDone: 'workoutRunning'
+          src: 'introduceWorkout'
+          // onDone: 'workoutRunning'
         }
       },
       workoutRunning: {

@@ -6,10 +6,11 @@ import { Difficulty, printDifficulty, Seconds, Workout } from '../data';
 
 interface HomeProps {
   workout: Workout;
+  onStart: () => void;
   onShuffle: () => void;
 }
 
-export const Home = ({ workout, onShuffle }: HomeProps) => {
+export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
   const { averageDifficulty, exerciseCount } = getWorkoutMeta(workout);
 
   return (
@@ -59,7 +60,9 @@ export const Home = ({ workout, onShuffle }: HomeProps) => {
       </main>
 
       <footer>
-        <button className="start-workout button-primary">START WORKOUT</button>
+        <button className="start-workout button-primary" onClick={onStart}>
+          START WORKOUT
+        </button>
         <button className="shuffle button-secondary" onClick={onShuffle}>
           <ShuffleIcon />
         </button>

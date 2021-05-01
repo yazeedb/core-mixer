@@ -2,11 +2,30 @@ import './App.scss';
 import { useMachine } from '@xstate/react';
 import { workoutMachine } from './workoutMachine';
 import { Home } from './screens/Home';
+import { WorkoutPage } from './screens/WorkoutPage';
 
 export const App = () => {
   const [{ context, matches }, send] = useMachine(workoutMachine, {
     devTools: true
   });
+
+  const renderContent = () => {
+    if (matches('viewingWorkout')) {
+      return (
+        <Home
+          workout={context.workout}
+          onStart={() => send('INTRODUCE_WORKOUT')}
+          onShuffle={() => {
+            send('SHUFFLE');
+          }}
+        />
+      );
+    }
+
+    if (matches('introducingWorkout') || matches('workoutRunning')) {
+      return <WorkoutPage context={context} />;
+    }
+  };
 
   return (
     <>
@@ -16,12 +35,7 @@ export const App = () => {
         <img src={sunIcon} role="presentation" />
       </nav>
 
-      <Home
-        workout={context.workout}
-        onShuffle={() => {
-          send('SHUFFLE');
-        }}
-      />
+      {renderContent()}
     </>
   );
 };
