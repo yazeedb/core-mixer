@@ -17,9 +17,9 @@ export const WorkoutPage = ({
   onContinue,
   onSkip
 }: WorkoutPageProps) => {
-  const { workout, timeRemaining, exerciseIndex } = context;
+  const { workout, timeRemainingMs, exerciseIndex } = context;
   const currentExercise = workout[exerciseIndex];
-  const percentage = timeRemaining / currentExercise.seconds;
+  const percentage = timeRemainingMs / currentExercise.duration;
 
   return (
     <>
@@ -44,7 +44,9 @@ export const WorkoutPage = ({
           />
         </div>
 
-        <h3 className="time-remaining">{Math.floor(timeRemaining)} seconds</h3>
+        <h3 className="time-remaining">
+          {(timeRemainingMs / 1000).toFixed(2)} seconds
+        </h3>
       </main>
 
       <footer>

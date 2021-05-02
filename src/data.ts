@@ -1,6 +1,6 @@
 import { getRandomInt, percentToIndex, shuffleArray } from './utils';
 
-export type Seconds = 30 | 60;
+export type DurationMs = 30000 | 60000;
 
 export enum Difficulty {
   beginner = 1,
@@ -21,12 +21,12 @@ interface Exercise extends Segment {
 
 interface TimedExercise extends Exercise {
   type: 'timedExercise';
-  seconds: Seconds;
+  duration: DurationMs;
 }
 
 interface RestPeriod extends Segment {
   type: 'restPeriod';
-  seconds: 30;
+  duration: 30000;
 }
 
 export type WorkoutItem = TimedExercise | RestPeriod;
@@ -55,7 +55,7 @@ export const generateWorkout = (): Workout => {
     audioFiles: [],
     videoDemoUrl: '/goku-situps.jpeg',
     imageUrl: '/goku-situps.jpeg',
-    seconds: 30
+    duration: 30000
   };
 
   const halfwayIndex = percentToIndex(randomExercises.length, 0.5);
@@ -64,7 +64,7 @@ export const generateWorkout = (): Workout => {
     const timedExercise: TimedExercise = {
       ...e,
       type: 'timedExercise',
-      seconds: Math.random() > 0.85 ? 30 : 60
+      duration: Math.random() > 0.85 ? 30000 : 60000
     };
 
     return index === halfwayIndex ? [restPeriod, timedExercise] : timedExercise;

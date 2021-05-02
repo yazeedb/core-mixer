@@ -4,14 +4,16 @@ import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
 
 const getInitialContext = (): MachineContext => ({
-  timeRemaining: 0,
+  previousTimeRemainingMs: 0,
+  timeRemainingMs: 0,
   exerciseIndex: -1,
   workout: generateWorkout()
 });
 
 export interface MachineContext {
   workout: Workout;
-  timeRemaining: number;
+  previousTimeRemainingMs: number;
+  timeRemainingMs: number;
   exerciseIndex: number;
 }
 
@@ -63,7 +65,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
             invoke: { id: 'timer', src: 'startTimer' },
             on: {
               TICK: {
-                actions: ['setTimeRemaining', 'notifyTimerService']
+                actions: ['setTimeRemainingMs', 'notifyTimerService']
               },
               TICK_30_SEC_LEFT: { actions: 'alert30SecLeft' },
               TICK_10_SEC_LEFT: { actions: 'alert10SecLeft' },
@@ -96,13 +98,17 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   },
   {
     actions: {
-      resetContext: getInitialContext,
+      resetContext: assign(getInitialContext),
       generateNewWorkout: assign({
         workout: (_) => generateWorkout()
       }),
 
       notifyTimerService: send(
-        ({ timeRemaining }) => ({ type: 'NEW_TIME', timeRemaining }),
+        ({ previousTimeRemainingMs, timeRemainingMs }) => ({
+          type: 'NEW_TIME',
+          previousTimeRemainingMs,
+          timeRemainingMs
+        }),
         { to: 'timer' }
       ),
 
@@ -114,13 +120,16 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         return {
           ...context,
           exerciseIndex: nextIndex,
-          timeRemaining: nextExercise.seconds
+          timeRemainingMs: nextExercise.duration
         };
       }),
 
-      setTimeRemaining: assign({
-        timeRemaining: (context, { decrementAmount }) =>
-          context.timeRemaining - decrementAmount
+      setTimeRemainingMs: assign((context, { decrementAmount }) => {
+        return {
+          ...context,
+          previousTimeRemainingMs: context.timeRemainingMs,
+          timeRemainingMs: context.timeRemainingMs - decrementAmount
+        };
       }),
 
       alert30SecLeft: assign((context) => {
@@ -142,46 +151,54 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       noExercisesLeft: ({ workout, exerciseIndex }) =>
         exerciseIndex >= workout.length - 1,
 
-      timeIsUp: ({ timeRemaining }) => timeRemaining === 0
+      timeIsUp: ({ timeRemainingMs }) => timeRemainingMs === 0
     },
     services: {
       startTimer: ({ exerciseIndex, workout }) => (cb, onReceive) => {
         const currentExercise = workout[exerciseIndex];
 
-        // @ts-ignore
-        onReceive(({ timeRemaining }) => {
-          if (timeRemaining === 30 && currentExercise.seconds === 60) {
+        // TODO: How to properly type this?
+        onReceive(({ previousTimeRemainingMs, timeRemainingMs }: any) => {
+          const justPassed30SecondMark =
+            timeRemainingMs <= 30000 && 30000 <= previousTimeRemainingMs;
+
+          const justPassed10SecondMark =
+            timeRemainingMs <= 10000 && 10000 <= previousTimeRemainingMs;
+
+          if (justPassed30SecondMark && currentExercise.duration === 60000) {
             cb({ type: 'TICK_30_SEC_LEFT' });
           }
 
-          if (timeRemaining === 10) {
+          if (justPassed10SecondMark) {
             cb({ type: 'TICK_10_SEC_LEFT' });
           }
 
-          if (timeRemaining === 0) {
+          if (timeRemainingMs <= 0) {
             cb({ type: 'TIME_IS_UP' });
           }
         });
 
         let id: number;
-        let past = Date.now();
+        let past: number;
 
         /**
-         * Fast enough to animate smoothly, but slow enough
-         * to avoid unneccessary computations.
+         * Low enough to animate smoothly, but high enough
+         * to limit unneccessary computations.
          */
         const THROTTLE_INTERVAL = 60;
 
-        const sendTick = () => {
-          const timeElapsed = Date.now() - past;
+        const sendTick = (timestamp: number) => {
+          past = past || timestamp;
+          const msElapsed = timestamp - past;
 
-          if (timeElapsed >= THROTTLE_INTERVAL) {
-            cb({ type: 'TICK', decrementAmount: timeElapsed / 1000 });
-            past = Date.now();
+          if (msElapsed >= THROTTLE_INTERVAL) {
+            cb({ type: 'TICK', decrementAmount: msElapsed * 100 });
+            past = timestamp;
           }
 
           id = requestAnimationFrame(sendTick);
         };
+
         id = requestAnimationFrame(sendTick);
 
         return () => cancelAnimationFrame(id);

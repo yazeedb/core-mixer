@@ -2,7 +2,7 @@ import { TimerIcon } from '../icons/Timer';
 import { getDifficultyIcon } from '../icons/getDifficultyIcon';
 import { DumbbellIcon } from '../icons/Dumbbell';
 import { ShuffleIcon } from '../icons/Shuffle';
-import { Difficulty, printDifficulty, Seconds, Workout } from '../data';
+import { Difficulty, printDifficulty, DurationMs, Workout } from '../data';
 
 interface HomeProps {
   workout: Workout;
@@ -52,7 +52,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
                 <img src={item.imageUrl} alt={`${item.name} demonstration`} />
 
                 <span className="name">{item.name}</span>
-                <span className="time">{printExerciseTime(item.seconds)}</span>
+                <span className="time">{printExerciseTime(item.duration)}</span>
               </div>
             </li>
           ))}
@@ -71,12 +71,12 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
   );
 };
 
-const printExerciseTime = (seconds: Seconds) =>
-  seconds === 30 ? '30 seconds' : '1 minute';
+const printExerciseTime = (seconds: DurationMs) =>
+  seconds === 30000 ? '30 seconds' : '1 minute';
 
 const printWorkoutTime = (workout: Workout) => {
   const totalWorkoutTime = workout.reduce(
-    (total, item) => total + item.seconds,
+    (total, item) => total + item.duration / 1000,
     0
   );
 

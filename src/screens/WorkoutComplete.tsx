@@ -1,4 +1,4 @@
-import { Seconds, Workout } from '../data';
+import { DurationMs, Workout } from '../data';
 
 interface WorkoutCompleteProps {
   onGoHome: () => void;
@@ -21,7 +21,7 @@ export const WorkoutComplete = ({
             <li>
               <div className="checkmark"></div>
               <span className="name">{item.name}</span>
-              <span className="time">{printExerciseTime(item.seconds)}</span>
+              <span className="time">{printExerciseTime(item.duration)}</span>
             </li>
           ))}
         </ul>
@@ -36,5 +36,5 @@ export const WorkoutComplete = ({
   );
 };
 
-const printExerciseTime = (seconds: Seconds) =>
-  seconds === 30 ? '30 seconds' : '1 min';
+const printExerciseTime = (duration: DurationMs) =>
+  duration === 30000 ? '30 Duration' : '1 min';
