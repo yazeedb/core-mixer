@@ -1,7 +1,7 @@
-import { TimerIcon } from '../icons/Timer';
-import { getDifficultyIcon } from '../icons/getDifficultyIcon';
-import { DumbbellIcon } from '../icons/Dumbbell';
-import { ShuffleIcon } from '../icons/Shuffle';
+import { TimerIcon } from '../svg/Timer';
+import { getDifficultyIcon } from '../svg/getDifficultyIcon';
+import { DumbbellIcon } from '../svg/Dumbbell';
+import { ShuffleIcon } from '../svg/Shuffle';
 import { Difficulty, printDifficulty, DurationMs, Workout } from '../data';
 
 interface HomeProps {
@@ -15,7 +15,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
 
   return (
     <>
-      <main>
+      <main className="home">
         <h2 className="workout-title">Your Workout</h2>
 
         <ul className="workout-details">
@@ -59,7 +59,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
         </ul>
       </main>
 
-      <footer>
+      <footer className="fixed">
         <button className="start-workout button-primary" onClick={onStart}>
           Start Workout
         </button>

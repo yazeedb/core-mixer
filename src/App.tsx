@@ -4,13 +4,33 @@ import { workoutMachine } from './workoutMachine';
 import { Home } from './screens/Home';
 import { WorkoutPage } from './screens/WorkoutPage';
 import { WorkoutComplete } from './screens/WorkoutComplete';
+import { useEffect } from 'react';
 
 export const App = () => {
   const [{ context, matches }, send] = useMachine(workoutMachine, {
     devTools: true
   });
 
-  const matchesAny = (states: string[]) => states.some(matches);
+  const showWorkout = ['introducingWorkout', 'workoutRunning'].some(matches);
+
+  const pauseIfUserTabsAway = () => {
+    if (matches('workoutRunning.paused')) {
+      return;
+    }
+
+    const message =
+      document.visibilityState === 'hidden' ? 'PAUSE' : 'CONTINUE';
+
+    send({ type: message });
+  };
+
+  useEffect(() => {
+    document.addEventListener('visibilitychange', pauseIfUserTabsAway);
+
+    return () => {
+      document.removeEventListener('visibilitychange', pauseIfUserTabsAway);
+    };
+  }, []);
 
   const renderContent = () => {
     if (matches('viewingWorkout')) {
@@ -23,7 +43,7 @@ export const App = () => {
       );
     }
 
-    if (matchesAny(['introducingWorkout', 'workoutRunning'])) {
+    if (showWorkout) {
       return (
         <WorkoutPage
           context={context}
@@ -47,7 +67,7 @@ export const App = () => {
     <>
       <nav>
         <h1 className="app-name">CoreMixer</h1>
-        <img src={sunIcon} role="presentation" />
+        <img src={sunIcon} alt="" role="presentation" />
       </nav>
 
       {renderContent()}

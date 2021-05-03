@@ -1,4 +1,4 @@
-import { SkipIcon } from '../icons/Skip';
+import { SkipIcon } from '../svg/Skip';
 import { MachineContext } from '../workoutMachine';
 import { Circle } from 'rc-progress';
 
@@ -45,7 +45,7 @@ export const WorkoutPage = ({
         </div>
 
         <h3 className="time-remaining">
-          {(timeRemainingMs / 1000).toFixed(2)} seconds
+          {(timeRemainingMs / 1000).toFixed(0)} seconds
         </h3>
       </main>
 

@@ -49,6 +49,14 @@ nav {
 
 main {
   padding: var(--app-padding);
+
+  &.home {
+    margin-bottom: 100px;
+  }
+}
+
+ul {
+  list-style: none;
 }
 
 .workout-list {
@@ -134,12 +142,23 @@ svg {
 
 footer {
   width: 100%;
-  position: fixed;
-  bottom: 0;
   padding: var(--app-padding);
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  &.fixed {
+    position: fixed;
+    bottom: 0;
+  }
+
+  &.workout-complete {
+    justify-content: center;
+
+    button {
+      width: 100%;
+    }
+  }
 
   .button-primary {
     width: 60%;

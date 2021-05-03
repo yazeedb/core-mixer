@@ -2,6 +2,9 @@ import { assign, Machine, send } from 'xstate';
 import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
+import restMp4 from './audio/thirty-sec-rest.mp4';
+import sixtySecondWorkout from './audio/sixty-second-workout.mp4';
+import thirtySecondWorkout from './audio/thirty-second-workout.mp4';
 
 const getInitialContext = (): MachineContext => ({
   previousTimeRemainingMs: 0,
@@ -178,38 +181,22 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           }
         });
 
-        let id: number;
-        let past: number;
+        const cleanup = startTicking((msElapsed) =>
+          cb({ type: 'TICK', decrementAmount: msElapsed })
+        );
 
-        /**
-         * Low enough to animate smoothly, but high enough
-         * to limit unneccessary computations.
-         */
-        const THROTTLE_INTERVAL = 60;
-
-        const sendTick = (timestamp: number) => {
-          past = past || timestamp;
-          const msElapsed = timestamp - past;
-
-          if (msElapsed >= THROTTLE_INTERVAL) {
-            cb({ type: 'TICK', decrementAmount: msElapsed * 100 });
-            past = timestamp;
-          }
-
-          id = requestAnimationFrame(sendTick);
-        };
-
-        id = requestAnimationFrame(sendTick);
-
-        return () => cancelAnimationFrame(id);
+        return cleanup;
       },
 
       introduceWorkout: () => playAudio(workoutIntroMp4),
 
       announceExercise: ({ workout, exerciseIndex }) => {
-        const { audioFiles } = workout[exerciseIndex];
+        const { audioFiles, duration } = workout[exerciseIndex];
 
-        return playAudio(audioFiles);
+        const file =
+          duration === 30000 ? thirtySecondWorkout : sixtySecondWorkout;
+
+        return playAudio([file]);
       },
 
       alertWhen30SecLeft: () => playAudio(workoutIntroMp4),
@@ -218,12 +205,43 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   }
 );
 
-const playAudio = (audioFiles: string[]) =>
-  new Promise((resolve) => {
-    resolve(null);
-    // new Howl({
-    //   src: audioFiles,
-    //   rate: 4,
-    //   onend: resolve
-    // }).play();
+const playAudio = (audioFiles: string[]) => {
+  const audio = new Howl({
+    src: audioFiles,
+    rate: 1.3
   });
+
+  const promise = new Promise((resolve) => {
+    audio.play();
+    audio.on('end', resolve);
+  });
+
+  return promise;
+};
+
+const startTicking = (onTick: (msElapsed: number) => void) => {
+  /**
+   * Low enough to animate smoothly, but high enough
+   * to limit unneccessary computations.
+   */
+  const THROTTLE_INTERVAL = 60;
+
+  let id: number;
+  let past: number;
+
+  const sendTick = (timestamp: number) => {
+    past = past || timestamp;
+    const msElapsed = timestamp - past;
+
+    if (msElapsed >= THROTTLE_INTERVAL) {
+      onTick(msElapsed * 20);
+      past = timestamp;
+    }
+
+    id = requestAnimationFrame(sendTick);
+  };
+
+  id = requestAnimationFrame(sendTick);
+
+  return () => cancelAnimationFrame(id);
+};

@@ -1,4 +1,5 @@
 import { DurationMs, Workout } from '../data';
+import { Splatter } from '../svg/Splatter';
 
 interface WorkoutCompleteProps {
   onGoHome: () => void;
@@ -11,8 +12,11 @@ export const WorkoutComplete = ({
 }: WorkoutCompleteProps) => {
   return (
     <>
-      <main className="workout-complete">
-        <h2>Workout Complete</h2>
+      <main>
+        <div className="splatter-container">
+          <h2>Workout Complete</h2>
+          <Splatter />
+        </div>
 
         <h3>Overview</h3>
 
@@ -27,7 +31,7 @@ export const WorkoutComplete = ({
         </ul>
       </main>
 
-      <footer>
+      <footer className="workout-complete">
         <button className="start-workout button-primary" onClick={onGoHome}>
           Go home
         </button>
