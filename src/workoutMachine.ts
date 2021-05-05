@@ -36,15 +36,14 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       },
       introducingWorkout: {
         entry: 'setNextExercise',
-        invoke: {
-          src: 'introduceWorkout',
-          onDone: 'workoutRunning'
-        }
+        invoke: { src: 'introduceWorkout' },
+        on: { AUDIO_DONE: 'workoutRunning' }
       },
       workoutRunning: {
         initial: 'introducingExercise',
         onDone: 'workoutComplete',
         on: {
+          AUDIO_DONE: 'workoutComplete',
           SKIP: [
             {
               target: 'workoutRunning.introducingExercise',
@@ -59,10 +58,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         },
         states: {
           introducingExercise: {
-            invoke: {
-              src: 'announceExercise',
-              onDone: 'running'
-            }
+            invoke: { src: 'announceExercise' },
+            on: { AUDIO_DONE: 'running' }
           },
           running: {
             invoke: { id: 'timer', src: 'startTimer' },
@@ -205,18 +202,18 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   }
 );
 
-const playAudio = (audioFiles: string[]) => {
+const playAudio = (audioFiles: string[]) => (cb: any) => {
   const audio = new Howl({
     src: audioFiles,
     rate: 1.3
   });
 
-  const promise = new Promise((resolve) => {
-    audio.play();
-    audio.on('end', resolve);
-  });
+  audio.play();
+  audio.on('end', () => cb({ type: 'AUDIO_DONE' }));
 
-  return promise;
+  return () => {
+    audio.stop();
+  };
 };
 
 const startTicking = (onTick: (msElapsed: number) => void) => {
