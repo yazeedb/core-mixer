@@ -17,12 +17,14 @@ module.exports = {
       'supporting-1': '#05606e',
       'supporting-2': '#f7c948',
       'supporting-3': '#ad1d07'
-
-      // 'box-shadow-1': '1px 1px 2px rgba(0, 0, 0, 0.4)',
-      // 'box-shadow-2': '0px 3px 6px rgba(0, 0, 0, 0.15)'
     },
     fontFamily: {
       sans: 'Avenir, Arial, Helvetica, sans-serif'
+    },
+    extend: {
+      zIndex: {
+        '-1': '-1'
+      }
     }
   },
   variants: {

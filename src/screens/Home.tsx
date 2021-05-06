@@ -16,7 +16,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
 
   return (
     <>
-      <main className={cn(['app-padding'])}>
+      <main className="app-padding">
         <h2 className="text-neutral-1">Your Workout</h2>
 
         <ul className={cn(['flex', 'justify-between', 'pt-3', 'pb-6'])}>
@@ -95,16 +95,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
         </ul>
       </main>
 
-      <footer
-        className={cn([
-          'fixed',
-          'w-full',
-          'app-padding',
-          'bottom-10',
-          'flex',
-          'justify-between'
-        ])}
-      >
+      <footer className="footer fixed bottom-2">
         <button onClick={onStart} className="btn-primary">
           Start Workout
         </button>
