@@ -1,5 +1,4 @@
 import { DurationMs, Workout } from '../data';
-import { Splatter } from '../svg/Splatter';
 
 interface WorkoutCompleteProps {
   onGoHome: () => void;
@@ -12,28 +11,28 @@ export const WorkoutComplete = ({
 }: WorkoutCompleteProps) => {
   return (
     <>
-      <main>
-        <div className="splatter-container">
-          <h2>Workout Complete</h2>
-          <Splatter />
-        </div>
+      <main className="app-padding">
+        <h2 className="font-medium">Workout Complete</h2>
 
-        <h3>Overview</h3>
+        <h3 className="my-4">Overview</h3>
 
-        <ul>
+        <ul className="mb-28">
           {workout.map((item) => (
-            <li>
-              <div className="checkmark"></div>
-              <span className="name">{item.name}</span>
-              <span className="time">{printExerciseTime(item.duration)}</span>
+            <li className="bg-neutral-3 py-5 px-6 my-4 rounded-lg flex justify-between">
+              <div className="font-bold">
+                <span className="mr-2">&#10003;</span>
+                <span>{item.name}</span>
+              </div>
+
+              <span className="">{printExerciseTime(item.duration)}</span>
             </li>
           ))}
         </ul>
       </main>
 
-      <footer className="workout-complete">
-        <button className="start-workout button-primary" onClick={onGoHome}>
-          Go home
+      <footer className="footer-fixed">
+        <button className="btn-primary w-full" onClick={onGoHome}>
+          Back to home
         </button>
       </footer>
     </>

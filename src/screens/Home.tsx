@@ -95,7 +95,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
         </ul>
       </main>
 
-      <footer className="footer fixed bottom-2">
+      <footer className="footer-fixed">
         <button onClick={onStart} className="btn-primary">
           Start Workout
         </button>
