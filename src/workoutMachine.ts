@@ -23,7 +23,7 @@ export interface MachineContext {
 export const workoutMachine = Machine<MachineContext, any, any>(
   {
     id: 'workout',
-    initial: 'viewingWorkout',
+    initial: 'workoutComplete',
     context: getInitialContext(),
     states: {
       viewingWorkout: {

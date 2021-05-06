@@ -3,6 +3,7 @@ import { getDifficultyIcon } from '../svg/getDifficultyIcon';
 import { DumbbellIcon } from '../svg/Dumbbell';
 import { ShuffleIcon } from '../svg/Shuffle';
 import { Difficulty, printDifficulty, DurationMs, Workout } from '../data';
+import { cn } from '../utils';
 
 interface HomeProps {
   workout: Workout;
@@ -15,55 +16,90 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
 
   return (
     <>
-      <main className="home">
-        <h2 className="workout-title">Your Workout</h2>
+      <main className="app-padding">
+        <h2 className="text-neutral-1">Your Workout</h2>
 
-        <ul className="workout-details">
-          <li>
-            <span className="icon">
+        <ul className={cn(['flex', 'justify-between', 'pt-3', 'pb-6'])}>
+          <li className={cn(['flex', 'justify-between', 'items-center'])}>
+            <span className="mr-2">
               <TimerIcon />
             </span>
 
-            <span className="label">{printWorkoutTime(workout)}</span>
+            <span className="capitalize">{printWorkoutTime(workout)}</span>
           </li>
 
-          <li>
-            <span className="icon">{getDifficultyIcon(averageDifficulty)}</span>
-            <span className="label">{printDifficulty(averageDifficulty)}</span>
+          <li className={cn(['flex', 'justify-between', 'items-center'])}>
+            <span className="mr-2">{getDifficultyIcon(averageDifficulty)}</span>
+            <span className="capitalize">
+              {printDifficulty(averageDifficulty)}
+            </span>
           </li>
 
-          <li>
-            <span className="icon">
+          <li className={cn(['flex', 'justify-between', 'items-center'])}>
+            <span className="mr-2">
               <DumbbellIcon />
             </span>
 
-            <span className="label">{exerciseCount} exercises</span>
+            <span className="capitalize">{exerciseCount} exercises</span>
           </li>
         </ul>
 
-        <ul className="workout-list">
+        <ul className="pl-3 mb-28">
           {workout.map((item) => (
-            <li className="workout-item" key={item.name}>
-              <div className="bullet-container">
-                <div className="bullet" />
+            <li
+              key={item.name}
+              className={cn([
+                'flex',
+                'justify-between',
+                'border-l border-neutral-1',
+                'relative',
+                'pl-8',
+                'pb-10'
+              ])}
+            >
+              <div
+                className={cn([
+                  'w-7',
+                  'h-7',
+                  'bg-primary-1',
+                  'rounded-full',
+                  'flex',
+                  'items-center',
+                  'justify-center',
+                  'absolute',
+                  'top-0',
+                  '-left-4'
+                ])}
+              >
+                <div
+                  className={cn(['bg-white', 'w-1/3', 'h-1/3', 'rounded-full'])}
+                />
               </div>
 
               <div className="something">
-                <img src={item.imageUrl} alt={`${item.name} demonstration`} />
+                <img
+                  src={item.imageUrl}
+                  alt={`${item.name} demonstration`}
+                  className={cn(['rounded-2xl', 'shadow-xl', 'w-full', 'h-24'])}
+                />
 
-                <span className="name">{item.name}</span>
-                <span className="time">{printExerciseTime(item.duration)}</span>
+                <h3 className="font-medium mt-2 text-lg text-neutral-1">
+                  {item.name}
+                </h3>
+                <span className="text-neutral-2">
+                  {printExerciseTime(item.duration)}
+                </span>
               </div>
             </li>
           ))}
         </ul>
       </main>
 
-      <footer className="fixed">
-        <button className="start-workout button-primary" onClick={onStart}>
+      <footer className="footer-fixed">
+        <button onClick={onStart} className="btn-primary">
           Start Workout
         </button>
-        <button className="shuffle button-secondary" onClick={onShuffle}>
+        <button className="btn-secondary" onClick={onShuffle}>
           <ShuffleIcon />
         </button>
       </footer>

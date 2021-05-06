@@ -1,220 +1,222 @@
-:root {
-  --white: #ffffff;
-  --black: #000;
+.beef {
+  :root {
+    --white: #ffffff;
+    --black: #000;
 
-  --primary-1: linear-gradient(#03449e, #01337d);
-  --primary-2: #01337d;
+    --primary-1: linear-gradient(#03449e, #01337d);
+    --primary-2: #01337d;
 
-  --neutral-1: #1f2933;
-  --neutral-2: #3e4c59;
-  --neutral-3: #e4e7eb;
-  --neutral-4: #f5f7fa;
+    --neutral-1: #1f2933;
+    --neutral-2: #3e4c59;
+    --neutral-3: #e4e7eb;
+    --neutral-4: #f5f7fa;
 
-  --supporting-1: #05606e;
-  --supporting-2: #f7c948;
-  --supporting-3: #ad1d07;
+    --supporting-1: #05606e;
+    --supporting-2: #f7c948;
+    --supporting-3: #ad1d07;
 
-  --font-family-1: Avenir, Arial, Helvetica, sans-serif;
+    --font-family-1: Avenir, Arial, Helvetica, sans-serif;
 
-  --app-padding: 20px;
+    --app-padding: 20px;
 
-  --border-radius-1: 20px;
+    --border-radius-1: 20px;
 
-  --box-shadow-1: 1px 1px 2px rgba(0, 0, 0, 0.4);
-  --box-shadow-2: 0px 3px 6px rgba(0, 0, 0, 0.15);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-family-1);
-  color: var(--neutral-1);
-}
-
-nav {
-  background: var(--primary-1);
-  color: var(--neutral-4);
-  display: flex;
-  justify-content: space-between;
-  padding: var(--app-padding);
-}
-
-.app-name {
-  font-weight: 500;
-}
-
-main {
-  padding: var(--app-padding);
-
-  &.home {
-    margin-bottom: 100px;
+    --box-shadow-1: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    --box-shadow-2: 0px 3px 6px rgba(0, 0, 0, 0.15);
   }
-}
 
-ul {
-  list-style: none;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-.workout-list {
-  padding-left: 15px;
-}
+  body {
+    font-family: var(--font-family-1);
+    color: var(--neutral-1);
+  }
 
-.workout-item {
-  display: flex;
-  justify-content: space-between;
-  border-left: 1px solid var(--neutral-1);
-  padding-left: 30px;
-  position: relative;
-
-  .bullet-container {
-    width: 27px;
-    height: 27px;
+  nav {
     background: var(--primary-1);
-    border-radius: 50%;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    color: var(--neutral-4);
     display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0px;
-    left: -15px;
+    justify-content: space-between;
+    padding: var(--app-padding);
+  }
 
-    .bullet {
-      background: var(--white);
-      width: 30%;
-      height: 30%;
+  .app-name {
+    font-weight: 500;
+  }
+
+  main {
+    padding: var(--app-padding);
+
+    &.home {
+      margin-bottom: 100px;
+    }
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .workout-list {
+    padding-left: 15px;
+  }
+
+  .workout-item {
+    display: flex;
+    justify-content: space-between;
+    border-left: 1px solid var(--neutral-1);
+    padding-left: 30px;
+    position: relative;
+
+    .bullet-container {
+      width: 27px;
+      height: 27px;
+      background: var(--primary-1);
       border-radius: 50%;
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0px;
+      left: -15px;
+
+      .bullet {
+        background: var(--white);
+        width: 30%;
+        height: 30%;
+        border-radius: 50%;
+      }
     }
-  }
 
-  .something {
-    margin-bottom: 30px;
-  }
+    .something {
+      margin-bottom: 30px;
+    }
 
-  img {
-    width: 100%;
-    height: 100px;
-    border-radius: var(--border-radius-1);
-    box-shadow: var(--box-shadow-1);
-    -webkit-box-shadow: var(--box-shadow-1);
-  }
-
-  .name {
-    display: block;
-    font-weight: 700;
-    text-transform: capitalize;
-  }
-
-  .time {
-    color: var(--neutral-2);
-  }
-}
-
-svg {
-  fill: var(--neutral-1);
-}
-
-.workout-title {
-  font-weight: 500;
-}
-
-.workout-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: calc(var(--app-padding) * 0.5);
-  margin-bottom: var(--app-padding);
-
-  li {
-    display: flex;
-    align-items: center;
-    text-transform: capitalize;
-  }
-
-  .icon {
-    margin-right: 5px;
-  }
-}
-
-footer {
-  width: 100%;
-  padding: var(--app-padding);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  &.fixed {
-    position: fixed;
-    bottom: 0;
-  }
-
-  &.workout-complete {
-    justify-content: center;
-
-    button {
+    img {
       width: 100%;
+      height: 100px;
+      border-radius: var(--border-radius-1);
+      box-shadow: var(--box-shadow-1);
+      -webkit-box-shadow: var(--box-shadow-1);
+    }
+
+    .name {
+      display: block;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .time {
+      color: var(--neutral-2);
     }
   }
 
-  .button-primary {
-    width: 60%;
+  svg {
+    fill: var(--neutral-1);
   }
 
-  .button-secondary {
-    width: 30%;
-  }
-}
-
-button {
-  border-radius: 28px;
-  font-size: 18px;
-  color: var(--neutral-4);
-  font-weight: 700;
-  height: 60px;
-  border: none;
-  box-shadow: var(--box-shadow-2);
-  text-transform: uppercase;
-
-  &.button-primary {
-    background: var(--primary-1);
+  .workout-title {
+    font-weight: 500;
   }
 
-  &.button-secondary {
-    background: var(--white);
-    border: 3px solid var(--primary-2);
+  .workout-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: calc(var(--app-padding) * 0.5);
+    margin-bottom: var(--app-padding);
+
+    li {
+      display: flex;
+      align-items: center;
+      text-transform: capitalize;
+    }
+
+    .icon {
+      margin-right: 5px;
+    }
+  }
+
+  footer {
+    width: 100%;
+    padding: var(--app-padding);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+
+    &.fixed {
+      position: fixed;
+      bottom: 0;
+    }
+
+    &.workout-complete {
+      justify-content: center;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .button-primary {
+      width: 60%;
+    }
+
+    .button-secondary {
+      width: 30%;
+    }
   }
-}
 
-.current-exercise {
-  text-align: center;
-}
+  button {
+    border-radius: 28px;
+    font-size: 18px;
+    color: var(--neutral-4);
+    font-weight: 700;
+    height: 60px;
+    border: none;
+    box-shadow: var(--box-shadow-2);
+    text-transform: uppercase;
 
-.stopwatch-container {
-  position: relative;
-  width: 300px;
-  height: 300px;
-  margin: 25px auto;
+    &.button-primary {
+      background: var(--primary-1);
+    }
 
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    z-index: -1;
+    &.button-secondary {
+      background: var(--white);
+      border: 3px solid var(--primary-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
-}
 
-.exercise-name,
-.time-remaining {
-  font-weight: 500;
-  font-size: 32px;
+  .current-exercise {
+    text-align: center;
+  }
+
+  .stopwatch-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 25px auto;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: -1;
+    }
+  }
+
+  .exercise-name,
+  .time-remaining {
+    font-weight: 500;
+    font-size: 32px;
+  }
 }

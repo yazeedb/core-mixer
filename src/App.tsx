@@ -5,6 +5,7 @@ import { Home } from './screens/Home';
 import { WorkoutPage } from './screens/WorkoutPage';
 import { WorkoutComplete } from './screens/WorkoutComplete';
 import { useEffect } from 'react';
+import { cn } from './utils';
 
 export const App = () => {
   const [{ context, matches }, send] = useMachine(workoutMachine, {
@@ -65,8 +66,16 @@ export const App = () => {
 
   return (
     <>
-      <nav>
-        <h1 className="app-name">CoreMixer</h1>
+      <nav
+        className={cn([
+          'flex',
+          'justify-between',
+          'app-padding',
+          'text-white',
+          'bg-primary-1'
+        ])}
+      >
+        <h1>CoreMixer</h1>
         <img src={sunIcon} alt="" role="presentation" />
       </nav>
 
