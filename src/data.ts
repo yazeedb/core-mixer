@@ -155,5 +155,96 @@ const exercises: Exercise[] = [
     videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.intermediate,
     imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Dragon Flags',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Screen-door planks',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Dead bugs',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Mountain climbers',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Advanced Criss-cross',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Boat roll-ups',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Crunches (legs raised)',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Plow leg lifts',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Reverse bicycles',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Walk-out planks',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Alternating leg lifts',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.beginner,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Flutter-kick crunches',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.advanced,
+    imageUrl: '/goku-situps.jpeg'
+  },
+  {
+    name: 'Windshield wipers',
+    audioFiles: [],
+    videoDemoUrl: '/goku-situps.jpeg',
+    difficulty: Difficulty.intermediate,
+    imageUrl: '/goku-situps.jpeg'
   }
 ];
