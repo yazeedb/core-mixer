@@ -65,7 +65,7 @@ export const App = () => {
   };
 
   return (
-    <>
+    <div className="app-max-size">
       <nav
         className={cn([
           'flex',
@@ -80,7 +80,7 @@ export const App = () => {
       </nav>
 
       {renderContent()}
-    </>
+    </div>
   );
 };
 

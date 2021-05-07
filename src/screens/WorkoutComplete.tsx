@@ -40,4 +40,4 @@ export const WorkoutComplete = ({
 };
 
 const printExerciseTime = (duration: DurationMs) =>
-  duration === 30000 ? '30 Duration' : '1 min';
+  duration === 30000 ? '30 sec' : '1 min';

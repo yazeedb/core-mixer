@@ -35,11 +35,15 @@
     @apply p-5;
   }
 
+  .app-max-size {
+    @apply max-w-md mx-auto my-0;
+  }
+
   .footer {
     @apply w-full app-padding flex justify-between;
   }
 
   .footer-fixed {
-    @apply footer fixed bottom-2;
+    @apply footer fixed bottom-2 app-max-size;
   }
 }
