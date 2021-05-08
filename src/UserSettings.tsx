@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import cn from 'classnames';
+import { AppContext, Theme, Voice } from './index';
 
 export const UserSettings = () => {
-  const [theme, setTheme] = useState<Theme>(themes[0]);
-  const [selectedVoice, setSelectedVoice] = useState(voices[0]);
+  const { theme, voice, setTheme, setVoice } = useContext(AppContext);
 
   useEffect(() => {
     if (theme === 'light') {
@@ -20,8 +20,8 @@ export const UserSettings = () => {
       <section className="mb-3">
         <h3 className="pb-2 pt-4">Narrator</h3>
         <select
-          value={selectedVoice}
-          onChange={(e) => setSelectedVoice(e.currentTarget.value)}
+          value={voice}
+          onChange={(e) => setVoice(e.currentTarget.value as Voice)}
           className={cn([
             'w-full',
             'rounded-md',
@@ -66,7 +66,6 @@ export const UserSettings = () => {
   );
 };
 
-type Theme = 'light' | 'dark';
 const themes: Theme[] = ['light', 'dark'];
 
 const voices = ['Voice One', 'Voice Two', 'Voice Three'];
