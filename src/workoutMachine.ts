@@ -2,7 +2,6 @@ import { assign, Machine, send } from 'xstate';
 import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 import workoutIntroMp4 from './audio/workout-intro.mp4';
-import restMp4 from './audio/thirty-sec-rest.mp4';
 import sixtySecondWorkout from './audio/sixty-second-workout.mp4';
 import thirtySecondWorkout from './audio/thirty-second-workout.mp4';
 
@@ -185,36 +184,22 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         return cleanup;
       },
 
-      introduceWorkout: () => playAudio(workoutIntroMp4),
+      introduceWorkout: () => playAudioSequence([workoutIntroMp4], () => {}),
 
       announceExercise: ({ workout, exerciseIndex }) => {
-        const { audioFiles, duration } = workout[exerciseIndex];
+        const { audioFile, duration } = workout[exerciseIndex];
 
         const file =
           duration === 30000 ? thirtySecondWorkout : sixtySecondWorkout;
 
-        return playAudio([file]);
+        return playAudioSequence([file], () => {});
       },
 
-      alertWhen30SecLeft: () => playAudio(workoutIntroMp4),
-      alertWhen10SecLeft: () => playAudio(workoutIntroMp4)
+      alertWhen30SecLeft: () => playAudioSequence([workoutIntroMp4], () => {}),
+      alertWhen10SecLeft: () => playAudioSequence([workoutIntroMp4], () => {})
     }
   }
 );
-
-const playAudio = (audioFiles: string[]) => (cb: any) => {
-  const audio = new Howl({
-    src: audioFiles,
-    rate: 1.3
-  });
-
-  audio.play();
-  audio.on('end', () => cb({ type: 'AUDIO_DONE' }));
-
-  return () => {
-    audio.stop();
-  };
-};
 
 const startTicking = (onTick: (msElapsed: number) => void) => {
   /**
@@ -241,4 +226,37 @@ const startTicking = (onTick: (msElapsed: number) => void) => {
   id = requestAnimationFrame(sendTick);
 
   return () => cancelAnimationFrame(id);
+};
+
+const playAudioSequence = (tracks: string[], doneCb: () => void) => {
+  const howls = tracks.map((t) => new Howl({ src: t, rate: 2 }));
+
+  let index = 0;
+
+  const playNextTrack = () => {
+    const currentHowl = howls[index];
+
+    if (!currentHowl) {
+      cancelAnimationFrame(id);
+      doneCb();
+      return;
+    }
+
+    if (currentHowl.playing()) {
+      return;
+    }
+
+    currentHowl.play();
+    currentHowl.on('end', () => {
+      index++;
+      id = requestAnimationFrame(playNextTrack);
+    });
+  };
+
+  let id = requestAnimationFrame(playNextTrack);
+
+  return () => {
+    cancelAnimationFrame(id);
+    howls.forEach((h) => h.stop());
+  };
 };
