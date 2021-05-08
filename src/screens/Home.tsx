@@ -3,7 +3,7 @@ import { getDifficultyIcon } from '../svg/getDifficultyIcon';
 import { DumbbellIcon } from '../svg/Dumbbell';
 import { ShuffleIcon } from '../svg/Shuffle';
 import { Difficulty, printDifficulty, DurationMs, Workout } from '../data';
-import { cn } from '../utils';
+import cn from 'classnames';
 
 interface HomeProps {
   workout: Workout;
@@ -22,7 +22,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
         <ul className={cn(['flex', 'justify-between', 'pt-3', 'pb-6'])}>
           <li className={cn(['flex', 'justify-between', 'items-center'])}>
             <span className="mr-2">
-              <TimerIcon />
+              <TimerIcon className="fill-current" />
             </span>
 
             <span className="capitalize">{printWorkoutTime(workout)}</span>
@@ -37,7 +37,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
 
           <li className={cn(['flex', 'justify-between', 'items-center'])}>
             <span className="mr-2">
-              <DumbbellIcon />
+              <DumbbellIcon className="fill-current" />
             </span>
 
             <span className="capitalize">{exerciseCount} exercises</span>
@@ -51,7 +51,8 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
               className={cn([
                 'flex',
                 'justify-between',
-                'border-l border-neutral-1',
+                'border-l',
+                'border-neutral-1',
                 'relative',
                 'pl-8',
                 'pb-10'
@@ -83,9 +84,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
                   className={cn(['rounded-2xl', 'shadow-xl', 'w-full', 'h-24'])}
                 />
 
-                <h3 className="font-medium mt-2 text-lg text-neutral-1">
-                  {item.name}
-                </h3>
+                <h3 className="font-medium mt-2 text-lg">{item.name}</h3>
                 <span className="text-neutral-2">
                   {printExerciseTime(item.duration)}
                 </span>

@@ -30,5 +30,3 @@ export const pick30or60Seconds = () => (Math.random() > 0.5 ? 30 : 60);
 
 export const getRandomItem = <T>(array: T[]): T =>
   array[getRandomInt(0, array.length - 1)];
-
-export const cn = (classNames: string[]) => classNames.join(' ');
