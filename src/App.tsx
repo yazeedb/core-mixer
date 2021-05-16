@@ -83,6 +83,7 @@ export const App = () => {
         <h1>CoreMixer</h1>
 
         <button onClick={() => setSettingsOpen(true)}>
+          <span className="sr-only">Settings</span>
           <SettingsIcon className="fill-current" />
         </button>
       </nav>

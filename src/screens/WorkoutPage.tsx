@@ -41,7 +41,7 @@ export const WorkoutPage = ({
           <img
             src={currentExercise.videoDemoUrl}
             alt={`Demonstration of ${currentExercise.name}`}
-            className="absolute top-0 left-0 w-full h-full rounded-full -z-1"
+            className="absolute top-0 left-0 w-full h-full rounded-full z-[-1]"
           />
         </div>
 
@@ -59,6 +59,7 @@ export const WorkoutPage = ({
         </button>
 
         <button className="btn-secondary" onClick={onSkip}>
+          <span className="sr-only">Skip this exercise</span>
           <SkipIcon />
         </button>
       </footer>
