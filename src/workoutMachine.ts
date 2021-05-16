@@ -136,7 +136,6 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
       alert10SecLeft: assign((context) => {
         playAudioSequence(['./audio/10-seconds-left.mp3'], () => {});
-        console.warn('PLACEHOLDER WARNING: 10 sec left!');
 
         return context;
       })
