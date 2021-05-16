@@ -52,7 +52,7 @@ export const generateWorkout = (): Workout => {
   const restPeriod: RestPeriod = {
     type: 'restPeriod',
     name: 'Rest',
-    audioFile: '',
+    audioFile: '/audio/30-seconds-rest.mp3',
     videoDemoUrl: '/goku-situps.jpeg',
     imageUrl: '/goku-situps.jpeg',
     duration: 30000
@@ -70,6 +70,8 @@ export const generateWorkout = (): Workout => {
     return index === halfwayIndex ? [restPeriod, timedExercise] : timedExercise;
   });
 };
+
+const nameToMp3File = (name: string) => name.toLowerCase().split(' ').join('-');
 
 const exercises: Exercise[] = [
   {
@@ -162,89 +164,96 @@ const exercises: Exercise[] = [
     videoDemoUrl: '/goku-situps.jpeg',
     difficulty: Difficulty.advanced,
     imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Screen-door planks',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.intermediate,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Dead bugs',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.beginner,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Mountain climbers',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.beginner,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Advanced Criss-cross',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.advanced,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Boat roll-ups',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.advanced,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Crunches (legs raised)',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.advanced,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Plow leg lifts',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.advanced,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Reverse bicycles',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.intermediate,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Walk-out planks',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.intermediate,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Alternating leg lifts',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.beginner,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Flutter-kick crunches',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.advanced,
-    imageUrl: '/goku-situps.jpeg'
-  },
-  {
-    name: 'Windshield wipers',
-    audioFile: '',
-    videoDemoUrl: '/goku-situps.jpeg',
-    difficulty: Difficulty.intermediate,
-    imageUrl: '/goku-situps.jpeg'
   }
-];
+
+  // TODO: Re-add these exercises once audio/video's recorded
+  // {
+  //   name: 'Screen-door planks',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.intermediate,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Dead bugs',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.beginner,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Mountain climbers',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.beginner,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Advanced Criss-cross',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.advanced,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Boat roll-ups',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.advanced,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Crunches (legs raised)',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.advanced,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Plow leg lifts',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.advanced,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Reverse bicycles',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.intermediate,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Walk-out planks',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.intermediate,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Alternating leg lifts',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.beginner,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Flutter-kick crunches',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.advanced,
+  //   imageUrl: '/goku-situps.jpeg'
+  // },
+  // {
+  //   name: 'Windshield wipers',
+  // audioFile: '',
+  //   videoDemoUrl: '/goku-situps.jpeg',
+  //   difficulty: Difficulty.intermediate,
+  //   imageUrl: '/goku-situps.jpeg'
+  // }
+].map<Exercise>((e) => ({
+  ...e,
+  audioFile: `/audio/${nameToMp3File(e.name)}.mp3`
+}));
+
+console.log(exercises);

@@ -1,9 +1,6 @@
 import { assign, Machine, send } from 'xstate';
 import { generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
-import workoutIntroMp4 from './audio/workout-intro.mp4';
-import sixtySecondWorkout from './audio/sixty-second-workout.mp4';
-import thirtySecondWorkout from './audio/thirty-second-workout.mp4';
 
 const getInitialContext = (): MachineContext => ({
   previousTimeRemainingMs: 0,
@@ -132,12 +129,13 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       }),
 
       alert30SecLeft: assign((context) => {
-        console.warn('PLACEHOLDER WARNING: 30 sec left!');
+        playAudioSequence(['/audio/30-seconds-left.mp3'], () => {});
 
         return context;
       }),
 
       alert10SecLeft: assign((context) => {
+        playAudioSequence(['/audio/10-seconds-left.mp3'], () => {});
         console.warn('PLACEHOLDER WARNING: 10 sec left!');
 
         return context;
@@ -153,50 +151,66 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       timeIsUp: ({ timeRemainingMs }) => timeRemainingMs === 0
     },
     services: {
-      startTimer: ({ exerciseIndex, workout }) => (cb, onReceive) => {
-        const currentExercise = workout[exerciseIndex];
+      startTimer:
+        ({ exerciseIndex, workout }) =>
+        (cb, onReceive) => {
+          const currentExercise = workout[exerciseIndex];
 
-        // TODO: How to properly type this?
-        onReceive(({ previousTimeRemainingMs, timeRemainingMs }: any) => {
-          const justPassed30SecondMark =
-            timeRemainingMs <= 30000 && 30000 <= previousTimeRemainingMs;
+          // TODO: How to properly type this?
+          onReceive(({ previousTimeRemainingMs, timeRemainingMs }: any) => {
+            const justPassed30SecondMark =
+              timeRemainingMs <= 30000 && 30000 <= previousTimeRemainingMs;
 
-          const justPassed10SecondMark =
-            timeRemainingMs <= 10000 && 10000 <= previousTimeRemainingMs;
+            const justPassed10SecondMark =
+              timeRemainingMs <= 10000 && 10000 <= previousTimeRemainingMs;
 
-          if (justPassed30SecondMark && currentExercise.duration === 60000) {
-            cb({ type: 'TICK_30_SEC_LEFT' });
+            if (justPassed30SecondMark && currentExercise.duration === 60000) {
+              cb({ type: 'TICK_30_SEC_LEFT' });
+            }
+
+            if (justPassed10SecondMark) {
+              cb({ type: 'TICK_10_SEC_LEFT' });
+            }
+
+            if (timeRemainingMs <= 0) {
+              cb({ type: 'TIME_IS_UP' });
+            }
+          });
+
+          const cleanup = startTicking((msElapsed) =>
+            cb({ type: 'TICK', decrementAmount: msElapsed })
+          );
+
+          return cleanup;
+        },
+
+      introduceWorkout: () => (cb) =>
+        playAudioSequence(['/audio/intro-1.mp3'], () => cb('AUDIO_DONE')),
+
+      announceExercise:
+        ({ workout, exerciseIndex }) =>
+        (cb) => {
+          const { audioFile, duration, type } = workout[exerciseIndex];
+
+          if (type === 'restPeriod') {
+            return playAudioSequence([audioFile], () => cb('AUDIO_DONE'));
           }
 
-          if (justPassed10SecondMark) {
-            cb({ type: 'TICK_10_SEC_LEFT' });
-          }
+          const file =
+            duration === 30000
+              ? '/audio/thirty-seconds.mp3'
+              : '/audio/sixty-seconds.mp3';
 
-          if (timeRemainingMs <= 0) {
-            cb({ type: 'TIME_IS_UP' });
-          }
-        });
+          return playAudioSequence(
+            [audioFile, file, '/audio/exercise-countdown.mp3'],
+            () => cb('AUDIO_DONE')
+          );
+        },
 
-        const cleanup = startTicking((msElapsed) =>
-          cb({ type: 'TICK', decrementAmount: msElapsed })
-        );
-
-        return cleanup;
-      },
-
-      introduceWorkout: () => playAudioSequence([workoutIntroMp4], () => {}),
-
-      announceExercise: ({ workout, exerciseIndex }) => {
-        const { audioFile, duration } = workout[exerciseIndex];
-
-        const file =
-          duration === 30000 ? thirtySecondWorkout : sixtySecondWorkout;
-
-        return playAudioSequence([file], () => {});
-      },
-
-      alertWhen30SecLeft: () => playAudioSequence([workoutIntroMp4], () => {}),
-      alertWhen10SecLeft: () => playAudioSequence([workoutIntroMp4], () => {})
+      alertWhen30SecLeft: () =>
+        playAudioSequence(['/audio/30-seconds-left.mp3'], () => {}),
+      alertWhen10SecLeft: () =>
+        playAudioSequence(['/audio/10-seconds-left.mp3'], () => {})
     }
   }
 );
@@ -229,7 +243,7 @@ const startTicking = (onTick: (msElapsed: number) => void) => {
 };
 
 const playAudioSequence = (tracks: string[], doneCb: () => void) => {
-  const howls = tracks.map((t) => new Howl({ src: t, rate: 2 }));
+  const howls = tracks.map((t) => new Howl({ src: t }));
 
   let index = 0;
 
