@@ -230,7 +230,7 @@ const startTicking = (onTick: (msElapsed: number) => void) => {
     const msElapsed = timestamp - past;
 
     if (msElapsed >= THROTTLE_INTERVAL) {
-      onTick(msElapsed * 3);
+      onTick(msElapsed);
       past = timestamp;
     }
 
