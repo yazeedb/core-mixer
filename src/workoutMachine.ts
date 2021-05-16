@@ -129,13 +129,13 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       }),
 
       alert30SecLeft: assign((context) => {
-        playAudioSequence(['/audio/30-seconds-left.mp3'], () => {});
+        playAudioSequence(['./audio/30-seconds-left.mp3'], () => {});
 
         return context;
       }),
 
       alert10SecLeft: assign((context) => {
-        playAudioSequence(['/audio/10-seconds-left.mp3'], () => {});
+        playAudioSequence(['./audio/10-seconds-left.mp3'], () => {});
         console.warn('PLACEHOLDER WARNING: 10 sec left!');
 
         return context;
@@ -185,7 +185,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         },
 
       introduceWorkout: () => (cb) =>
-        playAudioSequence(['/audio/intro-1.mp3'], () => cb('AUDIO_DONE')),
+        playAudioSequence(['./audio/intro-1.mp3'], () => cb('AUDIO_DONE')),
 
       announceExercise:
         ({ workout, exerciseIndex }) =>
@@ -198,19 +198,19 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
           const file =
             duration === 30000
-              ? '/audio/thirty-seconds.mp3'
-              : '/audio/sixty-seconds.mp3';
+              ? './audio/thirty-seconds.mp3'
+              : './audio/sixty-seconds.mp3';
 
           return playAudioSequence(
-            [audioFile, file, '/audio/exercise-countdown.mp3'],
+            [audioFile, file, './audio/exercise-countdown.mp3'],
             () => cb('AUDIO_DONE')
           );
         },
 
       alertWhen30SecLeft: () =>
-        playAudioSequence(['/audio/30-seconds-left.mp3'], () => {}),
+        playAudioSequence(['./audio/30-seconds-left.mp3'], () => {}),
       alertWhen10SecLeft: () =>
-        playAudioSequence(['/audio/10-seconds-left.mp3'], () => {})
+        playAudioSequence(['./audio/10-seconds-left.mp3'], () => {})
     }
   }
 );

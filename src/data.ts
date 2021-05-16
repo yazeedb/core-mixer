@@ -52,7 +52,7 @@ export const generateWorkout = (): Workout => {
   const restPeriod: RestPeriod = {
     type: 'restPeriod',
     name: 'Rest',
-    audioFile: '/audio/30-seconds-rest.mp3',
+    audioFile: './audio/30-seconds-rest.mp3',
     videoDemoUrl: '/goku-situps.jpeg',
     imageUrl: '/goku-situps.jpeg',
     duration: 30000
@@ -253,7 +253,7 @@ const exercises: Exercise[] = [
   // }
 ].map<Exercise>((e) => ({
   ...e,
-  audioFile: `/audio/${nameToMp3File(e.name)}.mp3`
+  audioFile: `./audio/${nameToMp3File(e.name)}.mp3`
 }));
 
 console.log(exercises);
