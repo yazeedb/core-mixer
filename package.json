@@ -1,7 +1,6 @@
 {
   "name": "core-mixer",
   "version": "0.1.0",
-  "homepage": "https://yazeedb.com/cm",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.2",
@@ -31,7 +30,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "cross-env PUBLIC_URL=./ craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
