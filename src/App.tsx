@@ -82,17 +82,19 @@ export const App = () => {
       >
         <h1>CoreMixer</h1>
 
-        <button onClick={() => setSettingsOpen(true)}>
+        {/* TODO: Re-add Settings once voices and dark mode done */}
+
+        {/* <button onClick={() => setSettingsOpen(true)}>
           <span className="sr-only">Settings</span>
           <SettingsIcon className="fill-current" />
-        </button>
+        </button> */}
       </nav>
 
       {renderContent()}
 
-      <Modal open={settingsOpen} onClose={() => setSettingsOpen(false)}>
+      {/* <Modal open={settingsOpen} onClose={() => setSettingsOpen(false)}>
         <UserSettings />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
