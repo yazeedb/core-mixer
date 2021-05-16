@@ -69,7 +69,7 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
                   'justify-center',
                   'absolute',
                   'top-0',
-                  '-left-4'
+                  'left-[-14.5px]'
                 ])}
               >
                 <div
