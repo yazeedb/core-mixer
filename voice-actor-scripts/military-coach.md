@@ -28,8 +28,8 @@ We move out in 10 seconds.
 
 ### No workouts skipped
 
-Well done soldier. You've earned your keep this day.
+Congratulations, today's workout is complete.
 
 ### One or more workouts skipped
 
-You're all done for today. Try to avoid that Skip button tomorrow.
+Next time, try not to skip exercises.

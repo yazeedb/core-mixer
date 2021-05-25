@@ -1,32 +1,31 @@
-## Welcome intros
+## Welcome intro
 
-1. Welcome to your CoreMixer workout! This is a bodyweight-only workout, all you need is yourself and an open space. Let's get into it!
+Alright my friends, welcome to CoreMixer! <br />
+This is coach Sean Vigue from seanviguefitness.com, and I'll be guiding you through this workout. <br />
+No weights or machines needed, just your bodyweight and some open space. Here we go!
 
-## Any given exercise
+## Exercise: Introduction
 
 1. `{exerciseName}`.
-1. `{seconds}`.
-1. Begin in 3, 2, 1!
+2. `{seconds}` seconds.
+3. Begin in 5, 4, 3, 2, 1.
 
-## "30 sec left" (exercise)
+## Exercise: 30 sec left
 
-1. 30 seconds left, looking good!
+30 seconds left.
 
-## "10 sec left" (exercise)
+## Exercise: 10 sec left
 
-1. Almost there, 10 seconds left!
+10 seconds left.
 
-## "10 sec left" (rest)
+## Rest: Introduction
 
-1. 10 seconds left.
-1. 10 seconds left, that rest was over too fast.
+30 second rest.
 
-## Rest period
+## Rest: 10 sec left
 
-1. Alright take a break—30 seconds rest.
-1. Phew! Let's break for 30 seconds.
-1. Excellent, let's take a 30-second rest.
+10 seconds left.
 
 ## End of workout
 
-1. Excellent job, you're all done for today.
+Excellent work my friend, you're all done for today.
