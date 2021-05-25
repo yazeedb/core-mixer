@@ -1,23 +1,10 @@
-import { useContext, useEffect } from 'react';
-import cn from 'classnames';
-import { AppContext, Theme, Voice } from './index';
+// import { useContext, useEffect } from 'react';
+// import cn from 'classnames';
 
 export const UserSettings = () => {
-  const { theme, voice, setTheme, setVoice } = useContext(AppContext);
-
-  useEffect(() => {
-    if (theme === 'light') {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-    }
-  }, [theme]);
-
   return (
     <>
-      <section className="mb-3">
+      {/* <section className="mb-3">
         <h3 className="pb-2 pt-4">Narrator</h3>
         <select
           value={voice}
@@ -38,9 +25,9 @@ export const UserSettings = () => {
             </option>
           ))}
         </select>
-      </section>
+      </section> */}
 
-      <section className="mb-3">
+      {/* <section className="mb-3">
         <h3 className="pb-2 pt-4">Theme</h3>
         <select
           value={theme}
@@ -61,11 +48,11 @@ export const UserSettings = () => {
             </option>
           ))}
         </select>
-      </section>
+      </section> */}
     </>
   );
 };
 
-const themes: Theme[] = ['light', 'dark'];
+// const themes: Theme[] = ['light', 'dark'];
 
-const voices = ['Voice One', 'Voice Two', 'Voice Three'];
+// const voices = ['Voice One', 'Voice Two', 'Voice Three'];

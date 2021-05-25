@@ -46,7 +46,7 @@ export const printDifficulty = (d: Difficulty) => {
   }
 };
 
-export const generateWorkout = (): Workout => {
+export const generateWorkout = (difficulty: Difficulty): Workout => {
   const randomExercises = shuffleArray(exercises).slice(0, getRandomInt(5, 7));
 
   const restPeriod: RestPeriod = {
@@ -255,5 +255,3 @@ const exercises: Exercise[] = [
   ...e,
   audioFile: `./audio/${nameToMp3File(e.name)}.mp3`
 }));
-
-console.log(exercises);

@@ -3,11 +3,17 @@ import cn from 'classnames';
 
 interface ModalProps {
   open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children: React.ReactNode;
+  title: string;
 }
 
-export const Modal = ({ open, onClose, children }: ModalProps) => (
+export const Modal = ({
+  open,
+  children,
+  title,
+  onClose = () => {}
+}: ModalProps) => (
   <Dialog
     as="div"
     className="fixed inset-0 z-10 overflow-y-auto"
@@ -38,7 +44,7 @@ export const Modal = ({ open, onClose, children }: ModalProps) => (
           'rounded-2xl'
         ])}
       >
-        <Dialog.Title className="font-medium">Settings</Dialog.Title>
+        <Dialog.Title className="font-medium">{title}</Dialog.Title>
         <div className="mt-2">{children}</div>
 
         <div className="mt-4">

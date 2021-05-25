@@ -1,12 +1,17 @@
 import { assign, Machine, send } from 'xstate';
-import { generateWorkout, Workout } from './data';
+import { Difficulty, generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 
-const getInitialContext = (): MachineContext => ({
+const preferredDifficultyLocalStorageKey = 'preferredDifficulty';
+
+const getInitialContext = (
+  difficulty: Difficulty = Difficulty.beginner
+): MachineContext => ({
   previousTimeRemainingMs: 0,
   timeRemainingMs: 0,
   exerciseIndex: -1,
-  workout: generateWorkout()
+  workout: generateWorkout(difficulty),
+  difficulty: difficulty
 });
 
 export interface MachineContext {
@@ -14,19 +19,44 @@ export interface MachineContext {
   previousTimeRemainingMs: number;
   timeRemainingMs: number;
   exerciseIndex: number;
+  difficulty: Difficulty;
 }
 
 export const workoutMachine = Machine<MachineContext, any, any>(
   {
     id: 'workout',
-    initial: 'viewingWorkout',
+    initial: 'recallingDifficulty',
     context: getInitialContext(),
     states: {
+      recallingDifficulty: {
+        invoke: { src: 'recallDifficulty' },
+        on: {
+          NOT_FOUND: 'choosingDifficulty',
+          FOUND: {
+            target: 'viewingWorkout',
+            actions: 'setDifficulty'
+          }
+        }
+      },
+      choosingDifficulty: {
+        on: {
+          CHOOSE_DIFFICULTY: {
+            target: 'viewingWorkout',
+            actions: ['setDifficulty', 'rememberDifficulty']
+          }
+        }
+      },
       viewingWorkout: {
+        entry: 'generateNewWorkout',
         on: {
           INTRODUCE_WORKOUT: 'introducingWorkout',
-          SHUFFLE: {
-            actions: 'generateNewWorkout'
+          SHUFFLE: { actions: 'generateNewWorkout' },
+          SET_DIFFICULTY: {
+            actions: [
+              'setDifficulty',
+              'rememberDifficulty',
+              'generateNewWorkout'
+            ]
           }
         }
       },
@@ -94,9 +124,9 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   },
   {
     actions: {
-      resetContext: assign(getInitialContext),
+      resetContext: assign((context) => getInitialContext(context.difficulty)),
       generateNewWorkout: assign({
-        workout: (_) => generateWorkout()
+        workout: (context) => generateWorkout(context.difficulty)
       }),
 
       notifyTimerService: send(
@@ -138,6 +168,16 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         playAudioSequence(['./audio/10-seconds-left.mp3'], () => {});
 
         return context;
+      }),
+
+      setDifficulty: assign({
+        difficulty: (_, { difficulty }) => difficulty
+      }),
+
+      rememberDifficulty: assign((context, { difficulty }) => {
+        localStorage.setItem(preferredDifficultyLocalStorageKey, difficulty);
+
+        return context;
       })
     },
     guards: {
@@ -150,6 +190,17 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       timeIsUp: ({ timeRemainingMs }) => timeRemainingMs === 0
     },
     services: {
+      recallDifficulty: () => (cb) => {
+        const difficulty = localStorage.getItem(
+          preferredDifficultyLocalStorageKey
+        );
+
+        if (!difficulty) {
+          cb({ type: 'NOT_FOUND' });
+        } else {
+          cb({ type: 'FOUND', difficulty });
+        }
+      },
       startTimer:
         ({ exerciseIndex, workout }) =>
         (cb, onReceive) => {
@@ -208,6 +259,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
       alertWhen30SecLeft: () =>
         playAudioSequence(['./audio/30-seconds-left.mp3'], () => {}),
+
       alertWhen10SecLeft: () =>
         playAudioSequence(['./audio/10-seconds-left.mp3'], () => {})
     }

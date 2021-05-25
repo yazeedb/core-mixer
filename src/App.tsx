@@ -4,11 +4,11 @@ import { workoutMachine } from './workoutMachine';
 import { Home } from './screens/Home';
 import { WorkoutPage } from './screens/WorkoutPage';
 import { WorkoutComplete } from './screens/WorkoutComplete';
-import { useEffect, useState } from 'react';
-import cn from 'classnames';
-import { SettingsIcon } from './svg/Settings';
+import { useCallback, useEffect, useState } from 'react';
 import { Modal } from './Modal';
 import { UserSettings } from './UserSettings';
+import { ChooseDifficulty } from './screens/ChooseDifficulty';
+import { Nav } from './Nav';
 
 export const App = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -18,7 +18,7 @@ export const App = () => {
 
   const showWorkout = ['introducingWorkout', 'workoutRunning'].some(matches);
 
-  const pauseIfUserTabsAway = () => {
+  const pauseIfUserTabsAway = useCallback(() => {
     if (matches('workoutRunning.paused')) {
       return;
     }
@@ -27,7 +27,7 @@ export const App = () => {
       document.visibilityState === 'hidden' ? 'PAUSE' : 'CONTINUE';
 
     send({ type: message });
-  };
+  }, [matches, send]);
 
   useEffect(() => {
     document.addEventListener('visibilitychange', pauseIfUserTabsAway);
@@ -35,7 +35,7 @@ export const App = () => {
     return () => {
       document.removeEventListener('visibilitychange', pauseIfUserTabsAway);
     };
-  }, []);
+  }, [pauseIfUserTabsAway]);
 
   const renderContent = () => {
     if (matches('viewingWorkout')) {
@@ -70,31 +70,26 @@ export const App = () => {
 
   return (
     <div className="app-max-size">
-      <nav
-        className={cn([
-          'flex',
-          'justify-between',
-          'app-padding',
-          'text-neutral-4',
-          'bg-primary-1',
-          'items-center'
-        ])}
-      >
-        <h1>CoreMixer</h1>
+      {matches('choosingDifficulty') ? (
+        <ChooseDifficulty
+          onSubmit={(difficulty) =>
+            send({ type: 'CHOOSE_DIFFICULTY', difficulty })
+          }
+        />
+      ) : (
+        <>
+          <Nav onSettingsClick={() => setSettingsOpen(true)} />
+          {renderContent()}
 
-        {/* TODO: Re-add Settings once voices and dark mode done */}
-
-        {/* <button onClick={() => setSettingsOpen(true)}>
-          <span className="sr-only">Settings</span>
-          <SettingsIcon className="fill-current" />
-        </button> */}
-      </nav>
-
-      {renderContent()}
-
-      {/* <Modal open={settingsOpen} onClose={() => setSettingsOpen(false)}>
-        <UserSettings />
-      </Modal> */}
+          <Modal
+            open={settingsOpen}
+            onClose={() => setSettingsOpen(false)}
+            title="Settings"
+          >
+            <UserSettings />
+          </Modal>
+        </>
+      )}
     </div>
   );
 };
