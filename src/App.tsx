@@ -42,6 +42,7 @@ export const App = () => {
       return (
         <Home
           workout={context.workout}
+          difficulty={context.difficulty}
           onStart={() => send('INTRODUCE_WORKOUT')}
           onShuffle={() => send('SHUFFLE')}
         />

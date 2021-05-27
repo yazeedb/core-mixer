@@ -7,20 +7,26 @@ import cn from 'classnames';
 
 interface HomeProps {
   workout: Workout;
+  difficulty: Difficulty;
   onStart: () => void;
   onShuffle: () => void;
 }
 
-export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
-  const { averageDifficulty, exerciseCount } = getWorkoutMeta(workout);
+export const Home = ({
+  workout,
+  difficulty,
+  onStart,
+  onShuffle
+}: HomeProps) => {
+  const liClassName = 'flex justify-between items-center';
 
   return (
     <>
       <main className="app-padding">
         <h2 className="text-neutral-1">Your Workout</h2>
 
-        <ul className={cn(['flex', 'justify-between', 'pt-3', 'pb-6'])}>
-          <li className={cn(['flex', 'justify-between', 'items-center'])}>
+        <ul className="flex justify-between pt-3 pb-6">
+          <li className={liClassName}>
             <span className="mr-2">
               <TimerIcon className="fill-current" />
             </span>
@@ -28,26 +34,26 @@ export const Home = ({ workout, onStart, onShuffle }: HomeProps) => {
             <span className="capitalize">{printWorkoutTime(workout)}</span>
           </li>
 
-          <li className={cn(['flex', 'justify-between', 'items-center'])}>
-            <span className="mr-2">{getDifficultyIcon(averageDifficulty)}</span>
-            <span className="capitalize">
-              {printDifficulty(averageDifficulty)}
-            </span>
+          <li className={liClassName}>
+            <span className="mr-2">{getDifficultyIcon(difficulty)}</span>
+            <span className="capitalize">{printDifficulty(difficulty)}</span>
           </li>
 
-          <li className={cn(['flex', 'justify-between', 'items-center'])}>
+          <li className={liClassName}>
             <span className="mr-2">
               <DumbbellIcon className="fill-current" />
             </span>
 
-            <span className="capitalize">{exerciseCount} exercises</span>
+            <span className="capitalize">
+              {getExerciseCount(workout)} exercises
+            </span>
           </li>
         </ul>
 
         <ul className="pl-3 mb-28">
           {workout.map((item) => (
             <li
-              key={item.name}
+              key={item.id}
               className={cn([
                 'flex',
                 'justify-between',
@@ -122,25 +128,8 @@ const printWorkoutTime = (workout: Workout) => {
   return `${minutes}:${seconds.padEnd(2, '0')}`;
 };
 
-const getWorkoutMeta = (
-  workout: Workout
-): { averageDifficulty: Difficulty; exerciseCount: number } => {
-  const { difficultySum, exerciseCount } = workout.reduce(
-    (acc, item) => {
-      if (item.type === 'restPeriod') {
-        return acc;
-      }
-
-      return {
-        difficultySum: acc.difficultySum + item.difficulty,
-        exerciseCount: acc.exerciseCount + 1
-      };
-    },
-    { difficultySum: 0, exerciseCount: 0 }
+const getExerciseCount = (workout: Workout): number =>
+  workout.reduce(
+    (total, item) => (item.type === 'timedExercise' ? total + 1 : total),
+    0
   );
-
-  return {
-    averageDifficulty: Math.round(difficultySum / exerciseCount),
-    exerciseCount
-  };
-};

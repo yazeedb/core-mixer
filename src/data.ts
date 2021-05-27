@@ -1,4 +1,5 @@
-import { getRandomInt, percentToIndex, shuffleArray } from './utils';
+import { getRandomInt, percentToIndex, shuffleArray, take } from './utils';
+import { v4 } from 'uuid';
 
 export type DurationMs = 30000 | 60000;
 
@@ -9,6 +10,7 @@ export enum Difficulty {
 }
 
 interface Segment {
+  id: string;
   name: string;
   audioFile: string;
   videoDemoUrl: string;
@@ -46,10 +48,50 @@ export const printDifficulty = (d: Difficulty) => {
   }
 };
 
+const findAppropriateExercises = (difficulty: Difficulty): Exercise[] => {
+  const shuffledExercises = shuffleArray(exercises);
+
+  const beginnerExercises = shuffledExercises.filter(
+    (e) => e.difficulty === Difficulty.beginner
+  );
+
+  const intermediateExercises = shuffledExercises.filter(
+    (e) => e.difficulty === Difficulty.intermediate
+  );
+
+  const advancedExercises = shuffledExercises.filter(
+    (e) => e.difficulty === Difficulty.advanced
+  );
+
+  const oneOrTwo = getRandomInt(1, 2);
+
+  switch (difficulty) {
+    case Difficulty.beginner:
+      return [
+        ...take(5, beginnerExercises),
+        ...take(oneOrTwo, intermediateExercises)
+      ];
+
+    case Difficulty.intermediate:
+      return [
+        ...take(1, beginnerExercises),
+        ...take(4, intermediateExercises),
+        ...take(oneOrTwo, advancedExercises)
+      ];
+
+    case Difficulty.advanced:
+      return [
+        ...take(oneOrTwo, intermediateExercises),
+        ...take(6, advancedExercises)
+      ];
+  }
+};
+
 export const generateWorkout = (difficulty: Difficulty): Workout => {
-  const randomExercises = shuffleArray(exercises).slice(0, getRandomInt(5, 7));
+  const randomExercises = shuffleArray(findAppropriateExercises(difficulty));
 
   const restPeriod: RestPeriod = {
+    id: v4(),
     type: 'restPeriod',
     name: 'Rest',
     audioFile: './audio/30-seconds-rest.mp3',
@@ -58,7 +100,9 @@ export const generateWorkout = (difficulty: Difficulty): Workout => {
     duration: 30000
   };
 
+  const oneThirdIndex = percentToIndex(randomExercises.length, 0.33);
   const halfwayIndex = percentToIndex(randomExercises.length, 0.5);
+  const twoThirdsIndex = percentToIndex(randomExercises.length, 0.66);
 
   return randomExercises.flatMap<WorkoutItem>((e, index) => {
     const timedExercise: TimedExercise = {
@@ -67,7 +111,25 @@ export const generateWorkout = (difficulty: Difficulty): Workout => {
       duration: Math.random() > 0.85 ? 30000 : 60000
     };
 
-    return index === halfwayIndex ? [restPeriod, timedExercise] : timedExercise;
+    switch (difficulty) {
+      case Difficulty.beginner:
+      case Difficulty.intermediate:
+        return index === oneThirdIndex || index === twoThirdsIndex
+          ? [
+              {
+                ...restPeriod,
+                // Prevent duplicate IDs between the two rest periods
+                id: v4()
+              },
+              timedExercise
+            ]
+          : timedExercise;
+
+      case Difficulty.advanced:
+        return index === halfwayIndex
+          ? [restPeriod, timedExercise]
+          : timedExercise;
+    }
   });
 };
 
@@ -236,6 +298,13 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    name: 'Side planks',
+    audioFile: '',
+    videoDemoUrl: './goku-situps.jpeg',
+    difficulty: Difficulty.intermediate,
+    imageUrl: './goku-situps.jpeg'
+  },
+  {
     name: 'Dead bugs',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -320,13 +389,6 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
-    name: 'Flutter kicks',
-    audioFile: '',
-    videoDemoUrl: './goku-situps.jpeg',
-    difficulty: Difficulty.intermediate,
-    imageUrl: './goku-situps.jpeg'
-  },
-  {
     name: 'L Sits',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -356,6 +418,7 @@ const exercises: Exercise[] = [
   }
 ].map<Exercise>((e) => ({
   ...e,
+  id: v4(),
   audioFile: `./audio/${nameToMp3File(e.name)}.mp3`
 }));
 

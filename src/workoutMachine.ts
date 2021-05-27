@@ -198,7 +198,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         if (!difficulty) {
           cb({ type: 'NOT_FOUND' });
         } else {
-          cb({ type: 'FOUND', difficulty });
+          cb({ type: 'FOUND', difficulty: parseInt(difficulty) });
         }
       },
       startTimer:

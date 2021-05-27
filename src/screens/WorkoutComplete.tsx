@@ -19,7 +19,7 @@ export const WorkoutComplete = ({
         <ul className="mb-28">
           {workout.map((item) => (
             <li
-              key={item.name}
+              key={item.id}
               className="bg-neutral-3 py-5 px-6 my-4 rounded-lg flex justify-between"
             >
               <div className="font-bold">

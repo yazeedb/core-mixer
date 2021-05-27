@@ -1,9 +1,9 @@
 /**
- * Simplified version of the shuffle-array npm package
+ * Simplified, non-mutative version of the shuffle-array npm package
  * https://www.npmjs.com/package/shuffle-array
  */
 export const shuffleArray = <T>(arr: T[]): T[] => {
-  const collection = arr;
+  const collection = [...arr];
 
   let len = arr.length;
   let random;
@@ -30,3 +30,5 @@ export const pick30or60Seconds = () => (Math.random() > 0.5 ? 30 : 60);
 
 export const getRandomItem = <T>(array: T[]): T =>
   array[getRandomInt(0, array.length - 1)];
+
+export const take = <T>(n: number, array: T[]) => array.slice(0, n);
