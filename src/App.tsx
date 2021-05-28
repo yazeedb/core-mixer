@@ -7,7 +7,7 @@ import { WorkoutComplete } from './screens/WorkoutComplete';
 import { useCallback, useEffect, useState } from 'react';
 import { Modal } from './Modal';
 import { UserSettings } from './UserSettings';
-import { ChooseDifficulty } from './screens/ChooseDifficulty';
+import { ChoosePreferences } from './screens/ChoosePreferences';
 import { Nav } from './Nav';
 
 export const App = () => {
@@ -38,11 +38,21 @@ export const App = () => {
   }, [pauseIfUserTabsAway]);
 
   const renderContent = () => {
+    if (matches('choosingPreferences')) {
+      return (
+        <ChoosePreferences
+          onSubmit={(preferences) =>
+            send({ type: 'CHOOSE_PREFERENCES', preferences })
+          }
+        />
+      );
+    }
+
     if (matches('viewingWorkout')) {
       return (
         <Home
           workout={context.workout}
-          difficulty={context.difficulty}
+          difficulty={context.preferences.difficulty}
           onStart={() => send('INTRODUCE_WORKOUT')}
           onShuffle={() => send('SHUFFLE')}
         />
@@ -71,26 +81,19 @@ export const App = () => {
 
   return (
     <div className="app-max-size">
-      {matches('choosingDifficulty') ? (
-        <ChooseDifficulty
-          onSubmit={(difficulty) =>
-            send({ type: 'CHOOSE_DIFFICULTY', difficulty })
-          }
-        />
-      ) : (
-        <>
-          <Nav onSettingsClick={() => setSettingsOpen(true)} />
-          {renderContent()}
+      <Nav
+        showSettings={!matches('choosingPreferences')}
+        onSettingsClick={() => setSettingsOpen(true)}
+      />
+      {renderContent()}
 
-          <Modal
-            open={settingsOpen}
-            onClose={() => setSettingsOpen(false)}
-            title="Settings"
-          >
-            <UserSettings />
-          </Modal>
-        </>
-      )}
+      <Modal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        title="Settings"
+      >
+        <UserSettings />
+      </Modal>
     </div>
   );
 };

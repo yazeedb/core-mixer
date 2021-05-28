@@ -1,5 +1,6 @@
 import { getRandomInt, percentToIndex, shuffleArray, take } from './utils';
 import { v4 } from 'uuid';
+import { UserPreferences } from './workoutMachine';
 
 export type DurationMs = 30000 | 60000;
 
@@ -48,6 +49,8 @@ export const printDifficulty = (d: Difficulty) => {
   }
 };
 
+export type CoachName = 'military'; // | 'fitness' <-- TODO: Add this one Sean Vigue's files are ready
+
 const findAppropriateExercises = (difficulty: Difficulty): Exercise[] => {
   const shuffledExercises = shuffleArray(exercises);
 
@@ -87,14 +90,16 @@ const findAppropriateExercises = (difficulty: Difficulty): Exercise[] => {
   }
 };
 
-export const generateWorkout = (difficulty: Difficulty): Workout => {
-  const randomExercises = shuffleArray(findAppropriateExercises(difficulty));
+export const generateWorkout = (preferences: UserPreferences): Workout => {
+  const randomExercises = shuffleArray(
+    findAppropriateExercises(preferences.difficulty)
+  );
 
   const restPeriod: RestPeriod = {
     id: v4(),
     type: 'restPeriod',
     name: 'Rest',
-    audioFile: './audio/30-seconds-rest.mp3',
+    audioFile: `./audio/${preferences.coachName}/30-sec-rest.wav`,
     videoDemoUrl: './goku-situps.jpeg',
     imageUrl: './goku-situps.jpeg',
     duration: 30000
@@ -108,10 +113,11 @@ export const generateWorkout = (difficulty: Difficulty): Workout => {
     const timedExercise: TimedExercise = {
       ...e,
       type: 'timedExercise',
-      duration: Math.random() > 0.85 ? 30000 : 60000
+      duration: Math.random() > 0.85 ? 30000 : 60000,
+      audioFile: `./audio/${preferences.coachName}/${nameToWavFile(e.name)}.wav`
     };
 
-    switch (difficulty) {
+    switch (preferences.difficulty) {
       case Difficulty.beginner:
       case Difficulty.intermediate:
         return index === oneThirdIndex || index === twoThirdsIndex
@@ -133,10 +139,11 @@ export const generateWorkout = (difficulty: Difficulty): Workout => {
   });
 };
 
-const nameToMp3File = (name: string) => name.toLowerCase().split(' ').join('-');
+const nameToWavFile = (name: string) => name.toLowerCase().split(' ').join('-');
 
 const exercises: Exercise[] = [
   {
+    id: v4(),
     name: 'Double-leg stretches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -144,6 +151,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Hip dips',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -151,6 +159,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Leg raises',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -158,6 +167,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Bicycles',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -165,6 +175,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Criss-cross',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -172,6 +183,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Ab circles',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -179,6 +191,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Straddle crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -186,6 +199,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Twisting crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -193,6 +207,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Scissor crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -200,6 +215,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Elbow criss-cross',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -207,6 +223,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'V ups',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -214,6 +231,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Hollow holds',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -221,6 +239,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Russian twists',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -228,6 +247,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'High leg lifts',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -235,6 +255,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Low leg lifts',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -242,6 +263,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Pike presses',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -249,6 +271,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Patty cakes',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -256,6 +279,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Tailbone crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -263,6 +287,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -270,6 +295,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Reverse crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -277,6 +303,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Dragon flags',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -284,6 +311,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Planks',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -291,6 +319,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Screen-door planks',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -298,6 +327,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Side planks',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -305,6 +335,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Dead bugs',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -312,6 +343,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Mountain climbers',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -319,6 +351,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Advanced criss-cross',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -326,6 +359,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Boat roll-ups',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -333,13 +367,15 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
-    name: 'Crunches (legs raised)',
+    id: v4(),
+    name: 'Crunches legs raised',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
     difficulty: Difficulty.advanced,
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Plow leg lifts',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -347,6 +383,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Reverse bicycles',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -354,6 +391,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Bird dogs',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -361,6 +399,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Walk-out planks',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -368,6 +407,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Alternating leg lifts',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -375,6 +415,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Flutter kick crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -382,6 +423,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Flutter kicks',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -389,6 +431,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'L Sits',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -396,6 +439,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Starfish crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -403,6 +447,7 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'X Man crunches',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
@@ -410,16 +455,13 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   },
   {
+    id: v4(),
     name: 'Russian V-tuck twists',
     audioFile: '',
     videoDemoUrl: './goku-situps.jpeg',
     difficulty: Difficulty.advanced,
     imageUrl: './goku-situps.jpeg'
   }
-].map<Exercise>((e) => ({
-  ...e,
-  id: v4(),
-  audioFile: `./audio/${nameToMp3File(e.name)}.mp3`
-}));
+];
 
 console.log(exercises);

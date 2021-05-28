@@ -2,10 +2,11 @@ import cn from 'classnames';
 import { SettingsIcon } from './svg/Settings';
 
 interface NavProps {
+  showSettings: boolean;
   onSettingsClick: () => void;
 }
 
-export const Nav = ({ onSettingsClick }: NavProps) => {
+export const Nav = ({ showSettings, onSettingsClick }: NavProps) => {
   return (
     <nav
       className={cn([
@@ -19,10 +20,12 @@ export const Nav = ({ onSettingsClick }: NavProps) => {
     >
       <h1>CoreMixer</h1>
 
-      <button onClick={onSettingsClick}>
-        <span className="sr-only">Settings</span>
-        <SettingsIcon className="fill-current" />
-      </button>
+      {showSettings && (
+        <button onClick={onSettingsClick}>
+          <span className="sr-only">Settings</span>
+          <SettingsIcon className="fill-current" />
+        </button>
+      )}
     </nav>
   );
 };

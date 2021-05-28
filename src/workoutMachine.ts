@@ -1,17 +1,25 @@
 import { assign, Machine, send } from 'xstate';
-import { Difficulty, generateWorkout, Workout } from './data';
+import { CoachName, Difficulty, generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 
-const preferredDifficultyLocalStorageKey = 'preferredDifficulty';
+export interface UserPreferences {
+  difficulty: Difficulty;
+  coachName: CoachName;
+}
+
+const userPreferencesStorageKey = 'userPreferences';
 
 const getInitialContext = (
-  difficulty: Difficulty = Difficulty.beginner
+  preferences: UserPreferences = {
+    difficulty: Difficulty.beginner,
+    coachName: 'military'
+  }
 ): MachineContext => ({
   previousTimeRemainingMs: 0,
   timeRemainingMs: 0,
   exerciseIndex: -1,
-  workout: generateWorkout(difficulty),
-  difficulty: difficulty
+  workout: generateWorkout(preferences),
+  preferences
 });
 
 export interface MachineContext {
@@ -19,30 +27,30 @@ export interface MachineContext {
   previousTimeRemainingMs: number;
   timeRemainingMs: number;
   exerciseIndex: number;
-  difficulty: Difficulty;
+  preferences: UserPreferences;
 }
 
 export const workoutMachine = Machine<MachineContext, any, any>(
   {
     id: 'workout',
-    initial: 'recallingDifficulty',
+    initial: 'recallingPreferences',
     context: getInitialContext(),
     states: {
-      recallingDifficulty: {
-        invoke: { src: 'recallDifficulty' },
+      recallingPreferences: {
+        invoke: { src: 'recallPreferences' },
         on: {
-          NOT_FOUND: 'choosingDifficulty',
+          NOT_FOUND: 'choosingPreferences',
           FOUND: {
             target: 'viewingWorkout',
-            actions: 'setDifficulty'
+            actions: 'setPreferences'
           }
         }
       },
-      choosingDifficulty: {
+      choosingPreferences: {
         on: {
-          CHOOSE_DIFFICULTY: {
+          CHOOSE_PREFERENCES: {
             target: 'viewingWorkout',
-            actions: ['setDifficulty', 'rememberDifficulty']
+            actions: ['setPreferences', 'rememberPreferences']
           }
         }
       },
@@ -51,10 +59,10 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         on: {
           INTRODUCE_WORKOUT: 'introducingWorkout',
           SHUFFLE: { actions: 'generateNewWorkout' },
-          SET_DIFFICULTY: {
+          SET_PREFERENCES: {
             actions: [
-              'setDifficulty',
-              'rememberDifficulty',
+              'setPreferences',
+              'rememberPreferences',
               'generateNewWorkout'
             ]
           }
@@ -102,17 +110,23 @@ export const workoutMachine = Machine<MachineContext, any, any>(
                   cond: 'hasExercisesLeft',
                   actions: 'setNextExercise'
                 },
-                { target: 'exerciseComplete', cond: 'noExercisesLeft' }
+                {
+                  target: 'exerciseComplete',
+                  cond: 'noExercisesLeft'
+                }
               ]
             }
           },
           paused: {
             on: { CONTINUE: 'running' }
           },
-          exerciseComplete: { type: 'final' }
+          exerciseComplete: {
+            type: 'final'
+          }
         }
       },
       workoutComplete: {
+        invoke: { src: 'playCongratulations' },
         on: {
           GO_HOME: {
             target: 'viewingWorkout',
@@ -124,9 +138,9 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   },
   {
     actions: {
-      resetContext: assign((context) => getInitialContext(context.difficulty)),
+      resetContext: assign(({ preferences }) => getInitialContext(preferences)),
       generateNewWorkout: assign({
-        workout: (context) => generateWorkout(context.difficulty)
+        workout: ({ preferences }) => generateWorkout(preferences)
       }),
 
       notifyTimerService: send(
@@ -159,23 +173,32 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       }),
 
       alert30SecLeft: assign((context) => {
-        playAudioSequence(['./audio/30-seconds-left.mp3'], () => {});
+        playAudioSequence(
+          [`./audio/${context.preferences.coachName}/30-sec-left.wav`],
+          () => {}
+        );
 
         return context;
       }),
 
       alert10SecLeft: assign((context) => {
-        playAudioSequence(['./audio/10-seconds-left.mp3'], () => {});
+        playAudioSequence(
+          [`./audio/${context.preferences.coachName}/10-sec-left.wav`],
+          () => {}
+        );
 
         return context;
       }),
 
-      setDifficulty: assign({
-        difficulty: (_, { difficulty }) => difficulty
+      setPreferences: assign({
+        preferences: (_, { preferences }) => preferences
       }),
 
-      rememberDifficulty: assign((context, { difficulty }) => {
-        localStorage.setItem(preferredDifficultyLocalStorageKey, difficulty);
+      rememberPreferences: assign((context, { preferences }) => {
+        localStorage.setItem(
+          userPreferencesStorageKey,
+          JSON.stringify(preferences)
+        );
 
         return context;
       })
@@ -190,15 +213,15 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       timeIsUp: ({ timeRemainingMs }) => timeRemainingMs === 0
     },
     services: {
-      recallDifficulty: () => (cb) => {
-        const difficulty = localStorage.getItem(
-          preferredDifficultyLocalStorageKey
+      recallPreferences: () => (cb) => {
+        const preferences = parseStoredPreferences(
+          localStorage.getItem(userPreferencesStorageKey)
         );
 
-        if (!difficulty) {
+        if (!preferences) {
           cb({ type: 'NOT_FOUND' });
         } else {
-          cb({ type: 'FOUND', difficulty: parseInt(difficulty) });
+          cb({ type: 'FOUND', preferences });
         }
       },
       startTimer:
@@ -234,11 +257,24 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           return cleanup;
         },
 
-      introduceWorkout: () => (cb) =>
-        playAudioSequence(['./audio/intro-1.mp3'], () => cb('AUDIO_DONE')),
+      introduceWorkout:
+        ({ preferences }) =>
+        (cb) =>
+          playAudioSequence(
+            [`./audio/${preferences.coachName}/welcome.wav`],
+            () => cb('AUDIO_DONE')
+          ),
+
+      playCongratulations:
+        ({ preferences }) =>
+        (cb) =>
+          playAudioSequence(
+            [`./audio/${preferences.coachName}/congratulations.wav`],
+            () => cb('AUDIO_DONE')
+          ),
 
       announceExercise:
-        ({ workout, exerciseIndex }) =>
+        ({ workout, exerciseIndex, preferences }) =>
         (cb) => {
           const { audioFile, duration, type } = workout[exerciseIndex];
 
@@ -248,20 +284,26 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
           const file =
             duration === 30000
-              ? './audio/thirty-seconds.mp3'
-              : './audio/sixty-seconds.mp3';
+              ? `./audio/${preferences.coachName}/30-sec-exercise.wav`
+              : `./audio/${preferences.coachName}/60-sec-exercise.wav`;
 
           return playAudioSequence(
-            [audioFile, file, './audio/exercise-countdown.mp3'],
+            [audioFile, file, `./audio/${preferences.coachName}/countdown.wav`],
             () => cb('AUDIO_DONE')
           );
         },
 
-      alertWhen30SecLeft: () =>
-        playAudioSequence(['./audio/30-seconds-left.mp3'], () => {}),
+      alertWhen30SecLeft: ({ preferences }) =>
+        playAudioSequence(
+          [`./audio/${preferences.coachName}/30-sec-left.wav`],
+          () => {}
+        ),
 
-      alertWhen10SecLeft: () =>
-        playAudioSequence(['./audio/10-seconds-left.mp3'], () => {})
+      alertWhen10SecLeft: ({ preferences }) =>
+        playAudioSequence(
+          [`./audio/${preferences.coachName}/10-sec-left.wav`],
+          () => {}
+        )
     }
   }
 );
@@ -323,5 +365,24 @@ const playAudioSequence = (tracks: string[], doneCb: () => void) => {
   return () => {
     cancelAnimationFrame(id);
     howls.forEach((h) => h.stop());
+  };
+};
+
+const parseStoredPreferences = (
+  value: string | null
+): UserPreferences | null => {
+  if (!value) {
+    return null;
+  }
+
+  const { difficulty, coachName } = JSON.parse(value);
+
+  if (!difficulty || !coachName) {
+    return null;
+  }
+
+  return {
+    difficulty: parseInt(difficulty),
+    coachName
   };
 };
