@@ -46,16 +46,6 @@ export const Modal = ({
       >
         <Dialog.Title className="font-medium">{title}</Dialog.Title>
         <div className="mt-2">{children}</div>
-
-        <div className="mt-4">
-          <button
-            type="button"
-            className={cn(['text-blue-1', 'float-right', 'font-medium'])}
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
       </div>
     </div>
   </Dialog>

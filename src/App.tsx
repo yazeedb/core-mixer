@@ -5,9 +5,12 @@ import { Home } from './screens/Home';
 import { WorkoutPage } from './screens/WorkoutPage';
 import { WorkoutComplete } from './screens/WorkoutComplete';
 import { useState } from 'react';
-import { Modal } from './Modal';
-import { ChoosePreferences } from './screens/ChoosePreferences';
+import {
+  ChoosePreferences,
+  ChoosePreferencesModal
+} from './screens/ChoosePreferences';
 import { Nav } from './Nav';
+import { Modal } from './Modal';
 
 export const App = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -22,7 +25,7 @@ export const App = () => {
       return (
         <ChoosePreferences
           onSubmit={(preferences) =>
-            send({ type: 'CHOOSE_PREFERENCES', preferences })
+            send({ type: 'SET_PREFERENCES', preferences })
           }
         />
       );
@@ -65,17 +68,20 @@ export const App = () => {
         showSettings={matches('viewingWorkout')}
         onSettingsClick={() => setSettingsOpen(true)}
       />
+
       {renderContent()}
 
       <Modal
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
-        title="Settings"
+        title="Preferences"
       >
-        <ChoosePreferences
-          onSubmit={(preferences) =>
-            send({ type: 'CHOOSE_PREFERENCES', preferences })
-          }
+        <ChoosePreferencesModal
+          existingPreferences={context.preferences}
+          onSubmit={(preferences) => {
+            send({ type: 'SET_PREFERENCES', preferences });
+            setSettingsOpen(false);
+          }}
         />
       </Modal>
     </div>

@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { useState } from 'react';
 import { CoachName, Difficulty, printDifficulty } from '../data';
+
 import { UserPreferences } from '../workoutMachine';
 
 interface ChoosePreferencesProps {
@@ -30,6 +31,7 @@ export const ChoosePreferences = ({ onSubmit }: ChoosePreferencesProps) => {
           id="difficulties"
           name="difficulties"
           onChange={(e) => setDifficulty(parseInt(e.currentTarget.value))}
+          value={difficulty}
         >
           {difficulties.map((d) => (
             <option className="minw" value={d} key={d}>
@@ -48,6 +50,7 @@ export const ChoosePreferences = ({ onSubmit }: ChoosePreferencesProps) => {
           id="coachName"
           name="coachName"
           onChange={(e) => setCoachName(e.currentTarget.value as CoachName)}
+          value={coachName}
         >
           {coachNames.map((c) => (
             <option value={c} key={c}>
@@ -65,6 +68,70 @@ export const ChoosePreferences = ({ onSubmit }: ChoosePreferencesProps) => {
         Let's go
       </button>
     </main>
+  );
+};
+
+interface ChoosePreferencesModalProps extends ChoosePreferencesProps {
+  existingPreferences: UserPreferences;
+}
+
+export const ChoosePreferencesModal = ({
+  onSubmit,
+
+  existingPreferences
+}: ChoosePreferencesModalProps) => {
+  const [difficulty, setDifficulty] = useState(existingPreferences.difficulty);
+  const [coachName, setCoachName] = useState(existingPreferences.coachName);
+
+  return (
+    <>
+      <div>
+        <label className={labelClassNames} htmlFor="difficulties">
+          Difficulty:
+        </label>
+        <select
+          className={selectClassNames}
+          id="difficulties"
+          name="difficulties"
+          onChange={(e) => setDifficulty(parseInt(e.currentTarget.value))}
+          value={difficulty}
+        >
+          {difficulties.map((d) => (
+            <option className="minw" value={d} key={d}>
+              {printDifficulty(d)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className={labelClassNames} htmlFor="coachName">
+          Coach:
+        </label>
+        <select
+          className={selectClassNames}
+          id="coachName"
+          name="coachName"
+          onChange={(e) => setCoachName(e.currentTarget.value as CoachName)}
+          value={coachName}
+        >
+          {coachNames.map((c) => (
+            <option value={c} key={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mt-4 flex justify-end">
+        <button
+          className={'text-blue-1 font-medium mr-4 border-blue-1 border'}
+          onClick={() => onSubmit({ difficulty, coachName })}
+        >
+          Save
+        </button>
+      </div>
+    </>
   );
 };
 

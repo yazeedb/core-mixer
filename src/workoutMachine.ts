@@ -48,7 +48,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       },
       choosingPreferences: {
         on: {
-          CHOOSE_PREFERENCES: {
+          SET_PREFERENCES: {
             target: 'viewingWorkout',
             actions: ['setPreferences', 'rememberPreferences']
           }
