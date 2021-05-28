@@ -4,9 +4,8 @@ import { workoutMachine } from './workoutMachine';
 import { Home } from './screens/Home';
 import { WorkoutPage } from './screens/WorkoutPage';
 import { WorkoutComplete } from './screens/WorkoutComplete';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Modal } from './Modal';
-import { UserSettings } from './UserSettings';
 import { ChoosePreferences } from './screens/ChoosePreferences';
 import { Nav } from './Nav';
 
@@ -17,25 +16,6 @@ export const App = () => {
   });
 
   const showWorkout = ['introducingWorkout', 'workoutRunning'].some(matches);
-
-  const pauseIfUserTabsAway = useCallback(() => {
-    if (matches('workoutRunning.paused')) {
-      return;
-    }
-
-    const message =
-      document.visibilityState === 'hidden' ? 'PAUSE' : 'CONTINUE';
-
-    send({ type: message });
-  }, [matches, send]);
-
-  useEffect(() => {
-    document.addEventListener('visibilitychange', pauseIfUserTabsAway);
-
-    return () => {
-      document.removeEventListener('visibilitychange', pauseIfUserTabsAway);
-    };
-  }, [pauseIfUserTabsAway]);
 
   const renderContent = () => {
     if (matches('choosingPreferences')) {
@@ -82,7 +62,7 @@ export const App = () => {
   return (
     <div className="app-max-size">
       <Nav
-        showSettings={!matches('choosingPreferences')}
+        showSettings={matches('viewingWorkout')}
         onSettingsClick={() => setSettingsOpen(true)}
       />
       {renderContent()}
@@ -92,7 +72,11 @@ export const App = () => {
         onClose={() => setSettingsOpen(false)}
         title="Settings"
       >
-        <UserSettings />
+        <ChoosePreferences
+          onSubmit={(preferences) =>
+            send({ type: 'CHOOSE_PREFERENCES', preferences })
+          }
+        />
       </Modal>
     </div>
   );
