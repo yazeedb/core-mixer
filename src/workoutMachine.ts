@@ -159,8 +159,8 @@ export const workoutMachine = Machine<MachineContext, any, any>(
           firstExerciseAudio,
 
           // durations
-          `./audio/${coachName}/30-sec-exercise.mp3`,
           `./audio/${coachName}/60-sec-exercise.mp3`,
+          `./audio/${coachName}/30-sec-exercise.mp3`,
 
           // countdown
           `./audio/${coachName}/countdown.mp3`,
