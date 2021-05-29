@@ -99,7 +99,7 @@ export const generateWorkout = (preferences: UserPreferences): Workout => {
     id: v4(),
     type: 'restPeriod',
     name: 'Rest',
-    audioFile: `./audio/${preferences.coachName}/30-sec-rest.wav`,
+    audioFile: `./audio/${preferences.coachName}/30-sec-rest.mp3`,
     videoDemoUrl: './goku-situps.jpeg',
     imageUrl: './goku-situps.jpeg',
     duration: 30000
@@ -114,7 +114,7 @@ export const generateWorkout = (preferences: UserPreferences): Workout => {
       ...e,
       type: 'timedExercise',
       duration: Math.random() > 0.85 ? 30000 : 60000,
-      audioFile: `./audio/${preferences.coachName}/${nameToWavFile(e.name)}.wav`
+      audioFile: `./audio/${preferences.coachName}/${nameToWavFile(e.name)}.mp3`
     };
 
     switch (preferences.difficulty) {

@@ -174,7 +174,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
       alert30SecLeft: assign((context) => {
         playAudioSequence(
-          [`./audio/${context.preferences.coachName}/30-sec-left.wav`],
+          [`./audio/${context.preferences.coachName}/30-sec-left.mp3`],
           () => {}
         );
 
@@ -183,7 +183,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
       alert10SecLeft: assign((context) => {
         playAudioSequence(
-          [`./audio/${context.preferences.coachName}/10-sec-left.wav`],
+          [`./audio/${context.preferences.coachName}/10-sec-left.mp3`],
           () => {}
         );
 
@@ -261,7 +261,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         ({ preferences }) =>
         (cb) =>
           playAudioSequence(
-            [`./audio/${preferences.coachName}/welcome.wav`],
+            [`./audio/${preferences.coachName}/welcome.mp3`],
             () => cb('AUDIO_DONE')
           ),
 
@@ -269,7 +269,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         ({ preferences }) =>
         (cb) =>
           playAudioSequence(
-            [`./audio/${preferences.coachName}/congratulations.wav`],
+            [`./audio/${preferences.coachName}/congratulations.mp3`],
             () => cb('AUDIO_DONE')
           ),
 
@@ -284,24 +284,24 @@ export const workoutMachine = Machine<MachineContext, any, any>(
 
           const file =
             duration === 30000
-              ? `./audio/${preferences.coachName}/30-sec-exercise.wav`
-              : `./audio/${preferences.coachName}/60-sec-exercise.wav`;
+              ? `./audio/${preferences.coachName}/30-sec-exercise.mp3`
+              : `./audio/${preferences.coachName}/60-sec-exercise.mp3`;
 
           return playAudioSequence(
-            [audioFile, file, `./audio/${preferences.coachName}/countdown.wav`],
+            [audioFile, file, `./audio/${preferences.coachName}/countdown.mp3`],
             () => cb('AUDIO_DONE')
           );
         },
 
       alertWhen30SecLeft: ({ preferences }) =>
         playAudioSequence(
-          [`./audio/${preferences.coachName}/30-sec-left.wav`],
+          [`./audio/${preferences.coachName}/30-sec-left.mp3`],
           () => {}
         ),
 
       alertWhen10SecLeft: ({ preferences }) =>
         playAudioSequence(
-          [`./audio/${preferences.coachName}/10-sec-left.wav`],
+          [`./audio/${preferences.coachName}/10-sec-left.mp3`],
           () => {}
         )
     }
