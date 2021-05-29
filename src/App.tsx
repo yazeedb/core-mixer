@@ -11,6 +11,7 @@ import {
 } from './screens/ChoosePreferences';
 import { Nav } from './Nav';
 import { Modal } from './Modal';
+import { useNoSleep } from './useNoSleep';
 
 export const App = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -19,6 +20,8 @@ export const App = () => {
   });
 
   const showWorkout = ['introducingWorkout', 'workoutRunning'].some(matches);
+
+  useNoSleep();
 
   const renderContent = () => {
     if (matches('choosingPreferences')) {
