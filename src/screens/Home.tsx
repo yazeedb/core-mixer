@@ -3,7 +3,6 @@ import { getDifficultyIcon } from '../svg/getDifficultyIcon';
 import { DumbbellIcon } from '../svg/Dumbbell';
 import { ShuffleIcon } from '../svg/Shuffle';
 import { Difficulty, printDifficulty, DurationMs, Workout } from '../data';
-import cn from 'classnames';
 
 interface HomeProps {
   workout: Workout;
@@ -52,45 +51,20 @@ export const Home = ({
           </li>
         </ul>
 
-        <ul className="pl-3 mb-28">
+        <ul className="mb-28">
           {workout.map((item) => (
             <li
               key={item.id}
-              className={cn([
-                'flex',
-                'justify-between',
-                'border-l',
-                'border-neutral-1',
-                'relative',
-                'pl-8',
-                'pb-10'
-              ])}
+              className="bg-white shadow-lg mt-5 mb-16 rounded-md"
             >
-              <div
-                className={cn([
-                  'w-7',
-                  'h-7',
-                  'bg-primary-1',
-                  'rounded-full',
-                  'flex',
-                  'items-center',
-                  'justify-center',
-                  'absolute',
-                  'top-0',
-                  'left-[-14.5px]'
-                ])}
-              >
-                <div className="bg-white w-1/3 h-1/3 rounded-full" />
-              </div>
+              <img
+                src={item.imageUrl}
+                alt={`${item.name} demonstration`}
+                className="w-full h-48 rounded-t-md"
+              />
 
-              <div className="something">
-                <img
-                  src={item.imageUrl}
-                  alt={`${item.name} demonstration`}
-                  className="rounded-2xl shadow-xl w-full h-24"
-                />
-
-                <h3 className="font-medium mt-2 text-lg">{item.name}</h3>
+              <div className="p-4">
+                <h3 className="font-medium">{item.name}</h3>
                 <span className="text-neutral-2">
                   {printExerciseTime(item.duration)}
                 </span>

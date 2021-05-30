@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    @apply bg-neutral-4;
+  }
+
   h1 {
     @apply text-3xl;
   }
