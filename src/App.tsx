@@ -9,8 +9,8 @@ import {
   ChoosePreferences,
   ChoosePreferencesModal
 } from './screens/ChoosePreferences';
-import { Nav } from './Nav';
-import { Modal } from './Modal';
+import { Nav } from './components/Nav';
+import { Modal } from './components/Modal';
 import { useNoSleep } from './useNoSleep';
 
 export const App = () => {

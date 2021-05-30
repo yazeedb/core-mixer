@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { SettingsIcon } from './svg/Settings';
+import { SettingsIcon } from '../svg/Settings';
 
 interface NavProps {
   showSettings: boolean;
