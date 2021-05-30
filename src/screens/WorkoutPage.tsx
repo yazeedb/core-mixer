@@ -23,7 +23,7 @@ export const WorkoutPage = ({
 
   return (
     <>
-      <main className="app-padding text-center">
+      <main className="text-center">
         <span>
           {exerciseIndex + 1} out of {workout.length}
         </span>

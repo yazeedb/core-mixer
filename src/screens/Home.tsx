@@ -24,7 +24,7 @@ export const Home = ({
 
   return (
     <>
-      <main className="app-padding">
+      <main>
         <h2>Your Workout</h2>
 
         <ul className="flex justify-between pt-3 pb-6">
@@ -80,16 +80,14 @@ export const Home = ({
                   'left-[-14.5px]'
                 ])}
               >
-                <div
-                  className={cn(['bg-white', 'w-1/3', 'h-1/3', 'rounded-full'])}
-                />
+                <div className="bg-white w-1/3 h-1/3 rounded-full" />
               </div>
 
               <div className="something">
                 <img
                   src={item.imageUrl}
                   alt={`${item.name} demonstration`}
-                  className={cn(['rounded-2xl', 'shadow-xl', 'w-full', 'h-24'])}
+                  className="rounded-2xl shadow-xl w-full h-24"
                 />
 
                 <h3 className="font-medium mt-2 text-lg">{item.name}</h3>

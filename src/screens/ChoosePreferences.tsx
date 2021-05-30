@@ -20,7 +20,7 @@ export const ChoosePreferences = ({ onSubmit }: ChoosePreferencesProps) => {
   const [coachName, setCoachName] = useState(coachNames[0]);
 
   return (
-    <main className="app-padding">
+    <main>
       <div>
         <label className={labelClassNames} htmlFor="difficulties">
           Choose your difficulty:
@@ -33,7 +33,7 @@ export const ChoosePreferences = ({ onSubmit }: ChoosePreferencesProps) => {
           value={difficulty}
         >
           {difficulties.map((d) => (
-            <option className="minw" value={d} key={d}>
+            <option value={d} key={d}>
               {printDifficulty(d)}
             </option>
           ))}
@@ -94,7 +94,7 @@ export const ChoosePreferencesModal = ({
           value={difficulty}
         >
           {difficulties.map((d) => (
-            <option className="minw" value={d} key={d}>
+            <option value={d} key={d}>
               {printDifficulty(d)}
             </option>
           ))}

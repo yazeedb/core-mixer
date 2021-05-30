@@ -114,7 +114,7 @@ export const generateWorkout = (preferences: UserPreferences): Workout => {
       ...e,
       type: 'timedExercise',
       duration: Math.random() > 0.85 ? 30000 : 60000,
-      audioFile: `./audio/${preferences.coachName}/${nameToWavFile(e.name)}.mp3`
+      audioFile: `./audio/${preferences.coachName}/${nameToFile(e.name)}.mp3`
     };
 
     switch (preferences.difficulty) {
@@ -139,7 +139,7 @@ export const generateWorkout = (preferences: UserPreferences): Workout => {
   });
 };
 
-const nameToWavFile = (name: string) => name.toLowerCase().split(' ').join('-');
+const nameToFile = (name: string) => name.toLowerCase().split(' ').join('-');
 
 const exercises: Exercise[] = [
   {

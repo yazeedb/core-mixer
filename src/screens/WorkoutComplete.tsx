@@ -11,7 +11,7 @@ export const WorkoutComplete = ({
 }: WorkoutCompleteProps) => {
   return (
     <>
-      <main className="app-padding">
+      <main>
         <h2 className="font-medium">Workout Complete</h2>
 
         <ul className="mb-28">
