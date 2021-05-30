@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import { useState } from 'react';
 import { CoachName, Difficulty, printDifficulty } from '../data';
-
 import { UserPreferences } from '../workoutMachine';
 
 interface ChoosePreferencesProps {
@@ -61,7 +60,6 @@ export const ChoosePreferences = ({ onSubmit }: ChoosePreferencesProps) => {
       </div>
 
       <button
-        type="submit"
         className="btn-primary mt-8"
         onClick={() => onSubmit({ difficulty, coachName })}
       >
@@ -77,7 +75,6 @@ interface ChoosePreferencesModalProps extends ChoosePreferencesProps {
 
 export const ChoosePreferencesModal = ({
   onSubmit,
-
   existingPreferences
 }: ChoosePreferencesModalProps) => {
   const [difficulty, setDifficulty] = useState(existingPreferences.difficulty);
@@ -125,7 +122,7 @@ export const ChoosePreferencesModal = ({
 
       <div className="mt-4 flex justify-end">
         <button
-          className={'text-blue-1 font-medium mr-4 border-blue-1 border'}
+          className="text-blue-1 font-medium mr-4 border-blue-1 border"
           onClick={() => onSubmit({ difficulty, coachName })}
         >
           Save
