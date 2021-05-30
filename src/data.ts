@@ -463,5 +463,3 @@ const exercises: Exercise[] = [
     imageUrl: './goku-situps.jpeg'
   }
 ];
-
-console.log(exercises);
