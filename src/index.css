@@ -8,6 +8,7 @@
   }
   h2 {
     @apply text-2xl;
+    @apply text-neutral-1;
   }
   h3 {
     @apply text-xl;

@@ -14,8 +14,6 @@ export const WorkoutComplete = ({
       <main className="app-padding">
         <h2 className="font-medium">Workout Complete</h2>
 
-        <h3 className="my-4">Overview</h3>
-
         <ul className="mb-28">
           {workout.map((item) => (
             <li

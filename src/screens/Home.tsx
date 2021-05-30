@@ -25,7 +25,7 @@ export const Home = ({
   return (
     <>
       <main className="app-padding">
-        <h2 className="text-neutral-1">Your Workout</h2>
+        <h2>Your Workout</h2>
 
         <ul className="flex justify-between pt-3 pb-6">
           <li className={liClassName}>
