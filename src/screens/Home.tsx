@@ -10,13 +10,15 @@ interface HomeProps {
   difficulty: Difficulty;
   onStart: () => void;
   onShuffle: () => void;
+  ready: boolean;
 }
 
 export const Home = ({
   workout,
   difficulty,
   onStart,
-  onShuffle
+  onShuffle,
+  ready
 }: HomeProps) => {
   const liClassName = 'flex justify-between items-center';
 
@@ -102,7 +104,7 @@ export const Home = ({
 
       <footer className="footer-fixed">
         <button onClick={onStart} className="btn-primary">
-          Start Workout
+          {ready ? 'Start Workout' : 'Loading...'}
         </button>
         <button className="btn-secondary" onClick={onShuffle}>
           <span className="sr-only">Generate new workout</span>

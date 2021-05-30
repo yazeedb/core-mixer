@@ -41,6 +41,7 @@ export const App = () => {
           difficulty={context.preferences.difficulty}
           onStart={() => send('INTRODUCE_WORKOUT')}
           onShuffle={() => send('SHUFFLE')}
+          ready={matches('viewingWorkout.ready')}
         />
       );
     }

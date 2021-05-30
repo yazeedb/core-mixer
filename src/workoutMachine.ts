@@ -55,20 +55,27 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         }
       },
       viewingWorkout: {
-        entry: ['generateNewWorkout', 'preloadAudioFiles'],
+        initial: 'preparing',
+        onDone: 'introducingWorkout',
         on: {
-          INTRODUCE_WORKOUT: 'introducingWorkout',
-          SHUFFLE: {
-            actions: ['generateNewWorkout', 'preloadAudioFiles']
-          },
+          SHUFFLE: 'viewingWorkout.preparing',
           SET_PREFERENCES: {
-            actions: [
-              'setPreferences',
-              'rememberPreferences',
-              'generateNewWorkout',
-              'preloadAudioFiles'
-            ]
+            target: 'viewingWorkout.preparing',
+            actions: ['setPreferences', 'rememberPreferences']
           }
+        },
+        states: {
+          preparing: {
+            entry: 'generateNewWorkout',
+            invoke: {
+              src: 'preloadAudioFiles',
+              onDone: 'ready'
+            }
+          },
+          ready: {
+            on: { INTRODUCE_WORKOUT: 'done' }
+          },
+          done: { type: 'final' }
         }
       },
       introducingWorkout: {
@@ -141,43 +148,6 @@ export const workoutMachine = Machine<MachineContext, any, any>(
   },
   {
     actions: {
-      preloadAudioFiles: assign((context) => {
-        const {
-          preferences: { coachName },
-          workout
-        } = context;
-
-        const [firstExerciseAudio, ...remainingExerciseAudios] = workout.map(
-          (item) => item.audioFile
-        );
-
-        [
-          // Load the Welcome message first
-          `./audio/${coachName}/welcome.mp3`,
-
-          // Then the first exercise's audio
-          firstExerciseAudio,
-
-          // durations
-          `./audio/${coachName}/60-sec-exercise.mp3`,
-          `./audio/${coachName}/30-sec-exercise.mp3`,
-
-          // countdown
-          `./audio/${coachName}/countdown.mp3`,
-
-          // reminders
-          `./audio/${coachName}/30-sec-left.mp3`,
-          `./audio/${coachName}/10-sec-left.mp3`,
-
-          // and finally the remaining exercises
-          ...remainingExerciseAudios
-        ].forEach((file) => {
-          new Howl({ src: file });
-        });
-
-        return context;
-      }),
-
       resetContext: assign(({ preferences }) => getInitialContext(preferences)),
       generateNewWorkout: assign({
         workout: ({ preferences }) => generateWorkout(preferences)
@@ -253,6 +223,55 @@ export const workoutMachine = Machine<MachineContext, any, any>(
       timeIsUp: ({ timeRemainingMs }) => timeRemainingMs === 0
     },
     services: {
+      preloadAudioFiles: (context) => {
+        const {
+          preferences: { coachName },
+          workout
+        } = context;
+
+        const [firstExerciseAudio, ...remainingExerciseAudios] = workout.map(
+          (item) => item.audioFile
+        );
+
+        return new Promise((resolve) => {
+          // Load critical audio files first
+          [
+            `./audio/${coachName}/welcome.mp3`,
+
+            firstExerciseAudio,
+
+            // durations
+            `./audio/${coachName}/60-sec-exercise.mp3`,
+            `./audio/${coachName}/30-sec-exercise.mp3`,
+
+            // countdown
+            `./audio/${coachName}/countdown.mp3`
+          ].forEach((file, index, arr) => {
+            const howl = new Howl({ src: file });
+
+            if (index === arr.length - 1) {
+              if (howl.state() === 'loaded') {
+                resolve(null);
+              } else {
+                howl.once('load', () => resolve(null));
+              }
+            }
+          });
+
+          // Then these come later
+          [
+            // reminders
+            `./audio/${coachName}/30-sec-left.mp3`,
+            `./audio/${coachName}/10-sec-left.mp3`,
+
+            ...remainingExerciseAudios,
+            `./audio/${coachName}/congratulations.mp3`
+          ].forEach((file) => {
+            new Howl({ src: file });
+          });
+        });
+      },
+
       recallPreferences: () => (cb) => {
         const preferences = parseStoredPreferences(
           localStorage.getItem(userPreferencesStorageKey)
