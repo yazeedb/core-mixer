@@ -288,8 +288,7 @@ export const workoutMachine = Machine<MachineContext, any, any>(
         (cb, onReceive) => {
           const currentExercise = workout[exerciseIndex];
 
-          // TODO: How to properly type this?
-          onReceive(({ previousTimeRemainingMs, timeRemainingMs }: any) => {
+          onReceive(({ previousTimeRemainingMs, timeRemainingMs }) => {
             const justPassed30SecondMark =
               timeRemainingMs <= 30000 && 30000 <= previousTimeRemainingMs;
 
