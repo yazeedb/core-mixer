@@ -1,4 +1,15 @@
-import { assign, Machine, send } from 'xstate';
+/*
+  Notes from Ivan consulting
+
+  1. Zod TS
+  2. XState-helpers
+  3. createMachine
+  4. timer service --> state machine
+  5. audio preloading --> state machine
+  6. Clock animation shouldn't need a 2nd timestamp
+*/
+
+import { assign, createMachine, send } from 'xstate';
 import { CoachName, Difficulty, generateWorkout, Workout } from './data';
 import { Howl } from 'howler';
 
@@ -30,7 +41,7 @@ export interface MachineContext {
   preferences: UserPreferences;
 }
 
-export const workoutMachine = Machine<MachineContext, any, any>(
+export const workoutMachine = createMachine<MachineContext, any, any>(
   {
     id: 'workout',
     initial: 'recallingPreferences',
