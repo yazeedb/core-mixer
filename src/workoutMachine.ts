@@ -290,6 +290,16 @@ export const workoutMachine = createMachine<MachineContext, any, any>(
 
           2. Using Promise would make it more visually
           obvious that "recallingPreferences" acts autonomously.
+
+          3. UX note: Consider making button immediately clickable,
+          and show some kind of loading indicator until audio prefetch is done.
+
+          4. Handling audio network errors
+
+          5. Consider skipping notifyTimerService, and let startTimer
+            handle the logic.
+
+          6. Transient states for 30/10 seconds left
         */
         const preferences = parseStoredPreferences(
           localStorage.getItem(userPreferencesStorageKey)
