@@ -284,6 +284,13 @@ export const workoutMachine = createMachine<MachineContext, any, any>(
       },
 
       recallPreferences: () => (cb) => {
+        /*
+          1. LocalStorage may throw in some browsers.
+          Optimally wrap this access in a safety-check.
+
+          2. Using Promise would make it more visually
+          obvious that "recallingPreferences" acts autonomously.
+        */
         const preferences = parseStoredPreferences(
           localStorage.getItem(userPreferencesStorageKey)
         );
